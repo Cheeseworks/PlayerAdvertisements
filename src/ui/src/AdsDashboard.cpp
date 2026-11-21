@@ -42,7 +42,7 @@ bool AdsDashboardCell::init(Ad ad, bool managed, bool pending, float width) {
             .opacity = 255,
             .sidePadding = 0.f,
             .verticalPadding = 0.f,
-            .texture = "geode.loader/GE_square02.png",
+            .texture = "GE_square02.png"_gode,
             .id = "",
         }
     );
@@ -54,7 +54,7 @@ bool AdsDashboardCell::init(Ad ad, bool managed, bool pending, float width) {
 
     addChildAtPosition(title, Anchor::Top, { 0.f, -10.f });
 
-    auto imgContainer = NineSlice::create("geode.loader/black-square.png");
+    auto imgContainer = NineSlice::create("black-square.png"_gode);
     imgContainer->setID("ad-thumbnail-container");
     imgContainer->setAnchorPoint({ 0, 0.5 });
     imgContainer->setContentSize({ 112.5f, 60.f });
@@ -99,7 +99,7 @@ bool AdsDashboardCell::init(Ad ad, bool managed, bool pending, float width) {
 
     auto viewCountLabel = Label::create(
         fmt::format("{} View{}", GameToolbox::pointsToString(m_ad.getViews()), m_ad.getViews() != 1 ? "s" : ""),  // this is so dumb
-        "geode.loader/mdFont.fnt"
+        "mdFont.fnt"_gode
     );
     viewCountLabel->setID("view-count-label");
     viewCountLabel->setScale(0.5f);
@@ -110,7 +110,7 @@ bool AdsDashboardCell::init(Ad ad, bool managed, bool pending, float width) {
 
     auto clickCountLabel = Label::create(
         fmt::format("{} Click{}", GameToolbox::pointsToString(m_ad.getClicks()), m_ad.getClicks() != 1 ? "s" : ""),  // this is still very dumb
-        "geode.loader/mdFontB.fnt"
+        "mdFontB.fnt"_gode
     );
     clickCountLabel->setID("click-count-label");
     clickCountLabel->setScale(0.425f);
@@ -430,7 +430,7 @@ bool AdsDashboard::init() {
     btnContainer->updateLayout();
 
     auto announcementBtnSprite = CircleButtonSprite::createWithSpriteFrameName(
-        "geode.loader/news.png",
+        "news.png"_gode,
         0.75f,
         CircleBaseColor::DarkAqua
     );
@@ -497,7 +497,7 @@ bool AdsDashboard::init() {
 
     auto containerWidth = std::min(maxContainerWidth, winSize.width - minSidesGap * 2.f);
 
-    auto menuContainer = NineSlice::create("geode.loader/GE_square03.png");
+    auto menuContainer = NineSlice::create("GE_square03.png"_gode);
     menuContainer->setID("menu-container");
     menuContainer->setContentSize({ containerWidth, 240.f });
 

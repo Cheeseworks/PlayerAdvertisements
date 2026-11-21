@@ -14,13 +14,13 @@ using namespace cw::ads;
 struct AdReportPopup::Impl final {
     Ad ad;
 
-    geode::async::TaskHolder<fetch::AuthResult> authTask;
-    geode::async::TaskHolder<geode::utils::web::WebResponse> getTask;
+    TaskHolder<fetch::AuthResult> authTask;
+    TaskHolder<geode::utils::web::WebResponse> getTask;
 
     TextInput* descInput = nullptr;
 
-    std::string userId = "";
-    std::string description = "";
+    std::string userId;
+    std::string description;
 
     async::TaskHolder<web::WebResponse> listener;
 };
@@ -31,11 +31,11 @@ AdReportPopup::~AdReportPopup() {}
 bool AdReportPopup::init(Ad ad) {
     m_impl->ad = std::move(ad);
 
-    if (!Popup::init(300.f, 200.f, "geode.loader/GE_square03.png")) return false;
+    if (!Popup::init(300.f, 200.f, "GE_square03.png"_gode)) return false;
 
     setID("report"_spr);
     setTitle("Report this ad?");
-    setCloseButtonSpr(CircleButtonSprite::createWithSpriteFrameName("geode.loader/close.png", 0.875f, CircleBaseColor::DarkAqua, CircleBaseSize::Small));
+    setCloseButtonSpr(CircleButtonSprite::createWithSpriteFrameName("close.png"_gode, 0.875f, CircleBaseColor::DarkAqua, CircleBaseSize::Small));
 
     m_impl->descInput = TextInput::create(260.f, "Report Reason...", "chatFont.fnt");
     m_impl->descInput->setID("description-input");
@@ -45,7 +45,7 @@ bool AdReportPopup::init(Ad ad) {
 
     m_mainLayer->addChild(m_impl->descInput);
 
-    auto submitButtonSprite = ButtonSprite::create("Submit Report", 0, false, "goldFont.fnt", "geode.loader/GE_button_05.png", 0.f, 1.f);
+    auto submitButtonSprite = ButtonSprite::create("Submit Report", 0, false, "goldFont.fnt", "GE_button_05.png", 0.f, 1.f);
 
     auto submitSpinner = LoadingSpinner::create(submitButtonSprite->getScaledContentHeight());
     submitSpinner->setVisible(false);
@@ -88,13 +88,13 @@ bool AdReportPopup::init(Ad ad) {
 void AdReportPopup::onSubmitButton(Button* sender, LoadingSpinner* spinner) {
     if (!m_impl->descInput) return;
 
-    auto upopup = UploadActionPopup::create(nullptr, "Submitting report...");
+    auto upopup = ProcessPopup::create("Submitting report...");
     upopup->show();
 
     std::string desc = m_impl->descInput->getString();
 
     if (desc.size() < 10) {
-        upopup->showFailMessage("Report reason is too short");
+        upopup->setFailure("Report reason is too short");
 
         sender->setVisible(true);
         spinner->setVisible(false);
@@ -104,11 +104,11 @@ void AdReportPopup::onSubmitButton(Button* sender, LoadingSpinner* spinner) {
 
     async::spawn(
         argon::startAuth(),
-        [self = WeakRef(this), btn = WeakRef(sender), btnLoad = WeakRef(spinner), desc = std::move(desc), upopup = WeakRef(upopup)](fetch::AuthResult res) {
+        [self = WeakRef(this), btn = WeakRef(sender), btnLoad = WeakRef(spinner), desc = std::move(desc), upopup = WeakRef(upopup)](fetch::AuthResult res) mutable {
             if (auto s = self.lock()) {
                 if (res.isErr()) {
                     log::warn("Auth failed: {}", std::move(res).unwrapErr());
-                    if (auto up = upopup.lock()) up->showFailMessage("Failed to authorize with Argon");
+                    if (auto up = upopup.lock()) up->setFailure("Failed to authorize with Argon");
 
                     return;
                 };
@@ -132,10 +132,10 @@ void AdReportPopup::onSubmitButton(Button* sender, LoadingSpinner* spinner) {
                         if (auto s = self.lock()) {
                             if (res.ok()) {
                                 s->onClose(nullptr);
-                                if (auto up = upopup.lock()) up->showSuccessMessage("Report submitted successfully!");
+                                if (auto up = upopup.lock()) up->setSuccess("Report submitted successfully!");
                             } else {
                                 log::error("Failed to send report ({}): {}", res.code(), res.errorMessage());
-                                if (auto up = upopup.lock()) up->showFailMessage(res.code() == 403 ? "You've been banned from reporting ads." : "Failed to send report!");
+                                if (auto up = upopup.lock()) up->setFailure(res.code() == 403 ? "You've been banned from reporting ads." : "Failed to send report!");
                             };
 
                             if (auto b = btn.lock()) b->setVisible(true);

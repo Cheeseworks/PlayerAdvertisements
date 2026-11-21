@@ -110,11 +110,11 @@ bool AdPreview::init(Ad ad, bool count) {
     m_impl->ad = std::move(ad);
     m_impl->hasClicked = !count;
 
-    if (!Popup::init(250.f, 200.f, "geode.loader/GE_square03.png")) return false;
+    if (!Popup::init(250.f, 200.f, "GE_square03.png"_gode)) return false;
 
     setID("preview"_spr);
     setTitle(fmt::format("Ad #{}", m_impl->ad.getID()));
-    setCloseButtonSpr(CircleButtonSprite::createWithSpriteFrameName("geode.loader/close.png", 0.875f, CircleBaseColor::DarkAqua, CircleBaseSize::Small));
+    setCloseButtonSpr(CircleButtonSprite::createWithSpriteFrameName("close.png"_gode, 0.875f, CircleBaseColor::DarkAqua, CircleBaseSize::Small));
 
     m_title->setScale(m_title->getScale() * 0.75f);
     m_title->setPositionY(m_title->getPositionY() + 2.5f);
@@ -222,7 +222,7 @@ bool AdPreview::init(Ad ad, bool count) {
 
     auto viewCountLabel = Label::create(
         fmt::format("{} View{}", GameToolbox::pointsToString(m_impl->ad.getViews()), m_impl->ad.getViews() != 1 ? "s" : ""),  // this is so dumb
-        "geode.loader/mdFont.fnt"
+        "mdFont.fnt"_gode
     );
     viewCountLabel->setID("view-count-label");
     viewCountLabel->setScale(0.425f);
@@ -233,7 +233,7 @@ bool AdPreview::init(Ad ad, bool count) {
 
     auto clickCountLabel = Label::create(
         fmt::format("{} Click{}", GameToolbox::pointsToString(m_impl->ad.getClicks()), m_impl->ad.getClicks() != 1 ? "s" : ""),  // this is still very dumb
-        "geode.loader/mdFontB.fnt"
+        "mdFontB.fnt"_gode
     );
     clickCountLabel->setID("click-count-label");
     clickCountLabel->setScale(0.375f);
@@ -281,7 +281,7 @@ bool AdPreview::init(Ad ad, bool count) {
     m_mainLayer->addChild(reportBtn);
 
     auto announcementBtnSprite = CircleButtonSprite::createWithSpriteFrameName(
-        "geode.loader/news.png",
+        "news.png"_gode,
         0.75f,
         CircleBaseColor::DarkAqua
     );
