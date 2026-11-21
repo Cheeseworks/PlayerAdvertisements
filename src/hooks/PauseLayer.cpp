@@ -1,6 +1,6 @@
-#include <Util.h>
+#include <cw.h>
 
-#include <Advertisements.h>
+#include <rhatt/prelude.h>
 
 #include <Geode/Geode.hpp>
 
@@ -49,8 +49,8 @@ class $modify(AdsPauseLayer, PauseLayer) {
         if (playTime) playTime->setPositionY(playTime->getPositionY() - 30.f);
         if (pointslabel) pointslabel->setPositionY(pointslabel->getPositionY() - 30.f);
 
-        nodes::placeAd(this, AdType::Banner, Anchor::Top, {0.f, -65.f});
-    };
+        nodes::placeAd(this, AdType::Banner, Anchor::Top, { 0.f, -65.f });
+    }
 };
 
 PLAYERADS_HOOK_LISTENER(g_hookId);

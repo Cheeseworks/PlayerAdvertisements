@@ -1,10 +1,13 @@
 #pragma once
 
-#include <Util.h>
+#include <cw.h>
+
+#include <util/ads.hpp>
+#include <util/web.hpp>
 
 #include <Geode/Geode.hpp>
 
-namespace cw::ads {
+namespace cw::ads::ui {
     class AdsDashboardCell final : public cocos2d::CCNode {
     private:
         Ad m_ad;

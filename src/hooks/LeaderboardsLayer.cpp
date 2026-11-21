@@ -1,6 +1,6 @@
-#include <Util.h>
+#include <cw.h>
 
-#include <Advertisements.h>
+#include <rhatt/prelude.h>
 
 #include <Geode/Geode.hpp>
 
@@ -18,10 +18,10 @@ class $modify(AdsLeaderboardsLayer, LeaderboardsLayer) {
     bool init(LeaderboardType type, LeaderboardStat stat) {
         if (!LeaderboardsLayer::init(type, stat)) return false;
 
-        nodes::placeAd(this, AdType::Banner, Anchor::Bottom, {0.f, 30.f});
+        nodes::placeAd(this, AdType::Banner, Anchor::Bottom, { 0.f, 30.f });
 
         return true;
-    };
+    }
 };
 
 PLAYERADS_HOOK_LISTENER(g_hookId);

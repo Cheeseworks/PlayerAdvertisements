@@ -1,6 +1,6 @@
-#include <Util.h>
+#include <cw.h>
 
-#include <Advertisements.h>
+#include <rhatt/prelude.h>
 
 #include <Geode/Geode.hpp>
 
@@ -27,34 +27,36 @@ class $modify(AdsPlayLayer, PlayLayer) {
     void setupHasCompleted() {
         auto f = m_fields.self();
 
-        f->bannerBottom = nodes::placeAd(m_uiLayer, AdType::Banner, Anchor::Bottom, {0.f, 30.f});
-        f->bannerBottom = nodes::placeAd(m_uiLayer, AdType::Banner, Anchor::Bottom, {0.f, 30.f});
+        f->bannerBottom = nodes::placeAd(m_uiLayer, AdType::Banner, Anchor::Bottom, { 0.f, 30.f });
+        f->bannerBottom = nodes::placeAd(m_uiLayer, AdType::Banner, Anchor::Bottom, { 0.f, 30.f });
 
         if (win::isWide()) {
-            f->skyscraperLeft = nodes::placeAd(m_uiLayer, AdType::Skyscraper, Anchor::Left, {30.f, 0.f});
-            f->skyscraperRight = nodes::placeAd(m_uiLayer, AdType::Skyscraper, Anchor::Right, {-30.f, 0.f});
+            f->skyscraperLeft = nodes::placeAd(m_uiLayer, AdType::Skyscraper, Anchor::Left, { 30.f, 0.f });
+            f->skyscraperRight = nodes::placeAd(m_uiLayer, AdType::Skyscraper, Anchor::Right, { -30.f, 0.f });
         };
 
+#ifdef CW_TESTING
         log::trace("setting up scheduler for auto ad refresh");
-        scheduleOnce(schedule_selector(AdsPlayLayer::schedReload), rng::generate(2.5f, 12.5f));
+#endif
+        scheduleOnce(schedule_selector(AdsPlayLayer::schedReload), cw::rng::get(12.5f, 2.5f));
 
         PlayLayer::setupHasCompleted();
-    };
+    }
 
     void fullReset() {
         reloadAllAds();
         PlayLayer::fullReset();
-    };
+    }
 
     void resetLevelFromStart() {
         reloadAllAds();
         PlayLayer::resetLevelFromStart();
-    };
+    }
 
     void destroyPlayer(PlayerObject* player, GameObject* object) {
         PlayLayer::destroyPlayer(player, object);
         if (player->m_isDead) reloadAllAds();
-    };
+    }
 
     void reloadAllAds() {
         auto f = m_fields.self();
@@ -66,17 +68,21 @@ class $modify(AdsPlayLayer, PlayLayer) {
         if (f->skyscraperRight) f->skyscraperRight->loadRandom();
         if (f->skyscraperLeft) f->skyscraperLeft->loadRandom();
 
+#ifdef CW_TESTING
         log::debug("All ads are now reloading");
+#endif
 
         f->lastTime = asp::Instant::now();
-    };
+    }
 
     void schedReload(float dt) {
+#ifdef CW_TESTING
         log::debug("reloading ads after {}s...", dt);
+#endif
         reloadAllAds();
 
-        scheduleOnce(schedule_selector(AdsPlayLayer::schedReload), rng::generate(2.5f, 12.5f));
-    };
+        scheduleOnce(schedule_selector(AdsPlayLayer::schedReload), cw::rng::get(12.5f, 2.5f));
+    }
 };
 
 PLAYERADS_HOOK_LISTENER(g_hookId);

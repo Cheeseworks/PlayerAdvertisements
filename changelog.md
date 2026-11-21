@@ -1,3 +1,7 @@
+# v1.4.2 
+- Ported to Geometry Dash version `2.209`
+  - Bumped Geode loader support to `v6.0.0`
+
 # v1.4.1 
 - Fix some authorization issues
 - Remove obtrusive ads from certain dropdown layers

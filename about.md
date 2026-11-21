@@ -1,9 +1,7 @@
 # ![💰](frame:GJ_achImage_001.png?scale=0.625) Player Advertisements
 **Community-led exposure platform for levels!**
 
-*by [Cheeseworks](user:6408873)!*
-
-> ![✳️](frame:collaborationIcon_001.png) <cg>*This mod has settings you can utilize to customize your experience.*</c>
+<cd>by [Cheeseworks](user:6408873)!</c>
 
 ---
 
@@ -52,4 +50,4 @@ Happy advertising!
 
 ---
 
-![🗨️](frame:gj_discordIcon_001.png?scale=0.375) **If you need help, join my [support Discord server](https://www.dsc.gg/cheeseworks) and ask! :)**
+![🗨️](frame:gj_discordIcon_001.png?scale=0.375) **If you need help, join my [support Discord server](https://cwrk.cc/discord) and ask! :)**

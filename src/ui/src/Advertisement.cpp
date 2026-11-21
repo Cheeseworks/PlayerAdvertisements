@@ -1,8 +1,12 @@
-#include <Advertisements.h>
+#include "../Advertisement.hpp"
 
 #include "ui/AdPreview.hpp"
 
-#include <argon/argon.hpp>
+#include <cw.h>
+
+#include <rhatt/prelude.h>
+
+#include <dankmeme.argon/argon.hpp>
 
 #include <fmt/core.h>
 
@@ -48,7 +52,7 @@ struct Advertisement::Impl final {
         };
 
         return contentSize;
-    };
+    }
 
     constexpr auto getParticlesForAdType(AdType type) noexcept {
         switch (type) {
@@ -58,11 +62,11 @@ struct Advertisement::Impl final {
             case AdType::Square: return particles::square;
             case AdType::Skyscraper: return particles::skyscraper;
         };
-    };
+    }
 };
 
-Advertisement::Advertisement() : m_impl(std::make_unique<Impl>()) {};
-Advertisement::~Advertisement() {};
+Advertisement::Advertisement() : m_impl(std::make_unique<Impl>()) {}
+Advertisement::~Advertisement() {}
 
 void Advertisement::reload() {
     removeAllChildren();
@@ -75,12 +79,16 @@ void Advertisement::reload() {
         return;
     };
 
+#ifdef CW_TESTING
     log::debug("Created LazySprite with size: {}x{}", getScaledContentWidth(), getScaledContentHeight());
+#endif
 
-    m_impl->adSprite->setPosition({getScaledContentWidth() / 2.f, getScaledContentHeight() / 2.f});
+    m_impl->adSprite->setPosition({ getScaledContentWidth() / 2.f, getScaledContentHeight() / 2.f });
     m_impl->adSprite->setVisible(true);
 
+#ifdef CW_TESTING
     log::trace("setting up callbacks");
+#endif
 
     m_impl->adSprite->setLoadCallback([this](Result<> res) {
         if (res.isErr()) {
@@ -99,8 +107,8 @@ void Advertisement::reload() {
         log::info("Ad image loaded successfully");
 
         m_impl->adIcon = CCSprite::createWithSpriteFrameName("adIcon.png"_spr);
-        m_impl->adIcon->setAnchorPoint({0.f, 0.f});
-        m_impl->adIcon->setPosition({3.f, 3.f});
+        m_impl->adIcon->setAnchorPoint({ 0.f, 0.f });
+        m_impl->adIcon->setPosition({ 3.f, 3.f });
         m_impl->adIcon->setScale(0.25f);
         m_impl->adIcon->setOpacity(125);
 
@@ -114,7 +122,7 @@ void Advertisement::reload() {
             return;
         };
 
-        m_impl->adSprite->setAnchorPoint({0.5, 0.5});
+        m_impl->adSprite->setAnchorPoint({ 0.5, 0.5 });
 
         float posx = m_impl->adSprite->getScaledContentWidth() * m_impl->adSprite->getScale() / 2.f;
         float posy = m_impl->adSprite->getScaledContentHeight() * m_impl->adSprite->getScale() / 2.f;
@@ -124,7 +132,7 @@ void Advertisement::reload() {
             posy = m_impl->adButton->getScaledContentHeight() / 2.f;
         };
 
-        m_impl->adSprite->setPosition({posx, posy});
+        m_impl->adSprite->setPosition({ posx, posy });
         m_impl->adSprite->setVisible(true);
 
         auto const natural = m_impl->adSprite->getScaledContentSize();
@@ -140,47 +148,49 @@ void Advertisement::reload() {
             float scale = std::min(sx, sy);
 
             m_impl->adSprite->setScale(scale);
+#ifdef CW_TESTING
             log::debug("Scaled ad sprite by {} to fit target {}x{} (natural {}x{})", scale, target.width, target.height, natural.width, natural.height);
+#endif
         };
 
         if (m_impl->ad.getGlowLevel() > 0) {
             auto const size = m_impl->adSprite->getScaledContentSize();
 
             auto featuredStar = CCSprite::createWithSpriteFrameName("featuredIcon.png"_spr);
-            featuredStar->setAnchorPoint({1.f, 0.f});
+            featuredStar->setAnchorPoint({ 1.f, 0.f });
             featuredStar->setScale(0.35f);
 
             auto xpos = 3.f;
             if (m_impl->adButton) xpos = m_impl->adButton->getScaledContentWidth() - 3.f;
 
-            featuredStar->setPosition({xpos, 4.25f});
+            featuredStar->setPosition({ xpos, 4.25f });
             featuredStar->setOpacity(200);
-            featuredStar->setColor({255, 255, 255});
+            featuredStar->setColor({ 255, 255, 255 });
 
             if (m_impl->adButton) m_impl->adButton->addChild(featuredStar, 9);
 
             auto glowNode = NineSlice::create("glow.png"_spr);
             glowNode->setContentSize(size);
-            glowNode->setAnchorPoint({0.5, 0.5});
+            glowNode->setAnchorPoint({ 0.5, 0.5 });
 
             if (m_impl->adButton) glowNode->setPosition(m_impl->adButton->getScaledContentSize() / 2);
 
             auto particles = GameToolbox::particleFromString(m_impl->getParticlesForAdType(m_impl->ad.getType()), CCParticleSystemQuad::create(), false);
             particles->setScale(1.25f);
-            particles->setAnchorPoint({0.5, 0.5});
+            particles->setAnchorPoint({ 0.5, 0.5 });
             particles->setPosition(glowNode->getPosition());
             particles->resetSystem();
             particles->update(0.15f);
 
             auto tag = Label::create("Featured", "bigFont.fnt");
             tag->setScale(0.375f);
-            tag->setAnchorPoint({1, 0});
+            tag->setAnchorPoint({ 1, 0 });
             tag->setAlignment(Label::Alignment::Right);
 
             float tagx = 12.f;
             if (m_impl->adButton) tagx = m_impl->adButton->getScaledContentWidth() - 12.f;
 
-            tag->setPosition({tagx, 3.f});
+            tag->setPosition({ tagx, 3.f });
             tag->setOpacity(200);
 
             if (m_impl->ad.getType() == AdType::Skyscraper) tag->setVisible(false);
@@ -188,32 +198,32 @@ void Advertisement::reload() {
             switch (m_impl->ad.getGlowLevel()) {
                 case 1: {
                     glowNode->setOpacity(175);
-                    glowNode->setColor({250, 250, 75});
-                    glowNode->setContentSize({size.width + 6.25f, size.height + 6.25f});
-                    particles->setStartColorVar({250, 250, 75, 255});
-                    tag->setColor({250, 250, 75});
+                    glowNode->setColor({ 250, 250, 75 });
+                    glowNode->setContentSize({ size.width + 6.25f, size.height + 6.25f });
+                    particles->setStartColorVar({ 250, 250, 75, 255 });
+                    tag->setColor({ 250, 250, 75 });
 
-                    if (featuredStar) featuredStar->setColor({250, 250, 75});
+                    if (featuredStar) featuredStar->setColor({ 250, 250, 75 });
                 } break;
 
                 case 2: {
                     glowNode->setOpacity(200);
-                    glowNode->setColor({50, 250, 250});
-                    glowNode->setContentSize({size.width + 7.5f, size.height + 7.5f});
-                    particles->setStartColorVar({50, 250, 250, 255});
-                    tag->setColor({50, 250, 250});
+                    glowNode->setColor({ 50, 250, 250 });
+                    glowNode->setContentSize({ size.width + 7.5f, size.height + 7.5f });
+                    particles->setStartColorVar({ 50, 250, 250, 255 });
+                    tag->setColor({ 50, 250, 250 });
 
-                    if (featuredStar) featuredStar->setColor({50, 250, 250});
+                    if (featuredStar) featuredStar->setColor({ 50, 250, 250 });
                 } break;
 
                 case 3: {
                     glowNode->setOpacity(250);
-                    glowNode->setColor({255, 125, 175});
-                    glowNode->setContentSize({size.width + 8.75f, size.height + 8.75f});
-                    particles->setStartColorVar({255, 125, 175, 255});
-                    tag->setColor({255, 125, 175});
+                    glowNode->setColor({ 255, 125, 175 });
+                    glowNode->setContentSize({ size.width + 8.75f, size.height + 8.75f });
+                    particles->setStartColorVar({ 255, 125, 175, 255 });
+                    tag->setColor({ 255, 125, 175 });
 
-                    if (featuredStar) featuredStar->setColor({255, 125, 175});
+                    if (featuredStar) featuredStar->setColor({ 255, 125, 175 });
                 } break;
 
                 default: {
@@ -224,7 +234,7 @@ void Advertisement::reload() {
             };
 
             if (glowNode) {
-                glowNode->setContentSize({glowNode->getScaledContentWidth() * 2.5f, glowNode->getScaledContentHeight() * 2.5f});
+                glowNode->setContentSize({ glowNode->getScaledContentWidth() * 2.5f, glowNode->getScaledContentHeight() * 2.5f });
                 glowNode->setScale(glowNode->getScale() / 2.5f);
 
                 if (m_impl->adButton) m_impl->adButton->addChild(glowNode, -5);
@@ -251,22 +261,23 @@ void Advertisement::reload() {
             };
 
             Notification::create("Ad not loaded", NotificationIcon::Error)->show();
-        });
+        }
+    );
     m_impl->adButton->setID("advertisement-btn");
 
     addChildAtPosition(m_impl->adButton, Anchor::Center);
-};
+}
 
 bool Advertisement::init(AdType type) {
     m_impl->type = type;
 
     if (!CCNode::init()) return false;
 
-    setAnchorPoint({0.5, 0.5});
+    setAnchorPoint({ 0.5, 0.5 });
     setContentSize(m_impl->getAdSize(type));
 
     return true;
-};
+}
 
 void Advertisement::handleAdResponse(web::WebResponse const& res) {
     if (res.error()) return log::error("Failed to fetch ad: HTTP {} ({})", res.code(), res.errorMessage());
@@ -291,7 +302,9 @@ void Advertisement::handleAdResponse(web::WebResponse const& res) {
 
     m_impl->ad = std::move(adRes).unwrap();
 
+#ifdef CW_TESTING
     log::trace("Sending view tracking request for ad_id={}, user_id={}", m_impl->ad.getID(), m_impl->ad.getUser());
+#endif
 
     async::spawn(
         argon::startAuth(),
@@ -307,7 +320,7 @@ void Advertisement::handleAdResponse(web::WebResponse const& res) {
                 viewBody["authtoken"] = std::move(res).unwrap();
                 viewBody["account_id"] = GJAccountManager::sharedState()->m_accountID;
 
-                auto viewRequest = fetch::baseRequest()
+                auto viewRequest = cw::request::base()
                                        .bodyJSON(viewBody);
 
                 async::spawn(
@@ -318,40 +331,53 @@ void Advertisement::handleAdResponse(web::WebResponse const& res) {
 
                             log::info("View passed ad_id={}, user_id={}", s->m_impl->ad.getID(), s->m_impl->ad.getUser());
 
+#ifdef CW_TESTING
                             log::debug("View request completed for ad_id={}, user_id={}", s->m_impl->ad.getID(), s->m_impl->ad.getUser());
+#endif
                         };
-                    });
+                    }
+                );
             }
-        });
+        }
+    );
 
+#ifdef CW_TESTING
     log::debug("Sent view tracking request for ad_id={}, user_id={}", m_impl->ad.getID(), m_impl->ad.getUser());
+#endif
 
     if (m_impl->adSprite && !m_impl->ad.getImage().empty()) {
+#ifdef CW_TESTING
         log::debug("Loading ad image from URL: {}", m_impl->ad.getImage());
+#endif
         m_impl->adSprite->loadFromUrl(utils::string::replace(m_impl->ad.getImage(), "arcticwoof.xyz", "cheeseworks.gay"), CCImage::kFmtUnKnown, true);
     } else if (m_impl->ad.getImage().empty()) {
         log::warn("Ad image URL is empty, skipping image load");
     } else {
         log::warn("Ad sprite missing when trying to load image");
     };
-};
+}
 
 void Advertisement::loadRandom() {
     reload();  // refresh any existing nodes :3
 
+#ifdef CW_TESTING
     log::trace("Preparing request for random advertisement...");
+#endif
 
-    auto request = fetch::baseRequest();
+    auto request = cw::request::base();
     request.param("type", static_cast<uint8_t>(m_impl->type));
 
     async::spawn(
         request.get("https://ads.cheeseworks.gay/api/ad"),
         [self = WeakRef(this)](web::WebResponse res) {
             if (auto s = self.lock()) s->handleAdResponse(res);
-        });
+        }
+    );
 
+#ifdef CW_TESTING
     log::debug("Sent request for random advertisement");
-};
+#endif
+}
 
 void Advertisement::onEnter() {
     CCNode::onEnter();
@@ -360,18 +386,18 @@ void Advertisement::onEnter() {
     m_impl->adListener.cancel();
 
     loadRandom();
-};
+}
 
 void Advertisement::onExit() {
     if (m_impl->adSprite) m_impl->adSprite->cancelLoad();
     m_impl->adListener.cancel();
 
     CCNode::onExit();
-};
+}
 
 LazySprite* Advertisement::getAdSprite() const noexcept {
     return m_impl->adSprite;
-};
+}
 
 Advertisement* Advertisement::create(AdType type) {
     auto ret = new Advertisement();
@@ -382,24 +408,4 @@ Advertisement* Advertisement::create(AdType type) {
 
     delete ret;
     return nullptr;
-};
-
-Advertisement* nodes::placeAd(CCNode* to, std::optional<std::string> id, AdType type, Anchor anchor, CCPoint const& offset) {
-    if (!to) return nullptr;
-
-    if (auto ad = Advertisement::create(type)) {
-        ad->setID(id.has_value() ? std::move(id).value() : formatIDForAd(type, anchor));
-        ad->setScale(0.975f);
-        ad->setZOrder(HIGHEST_Z);
-
-        to->addChildAtPosition(ad, anchor, offset, false);
-
-        return ad;
-    };
-
-    return nullptr;
-};
-
-Advertisement* nodes::placeAd(cocos2d::CCNode* to, AdType type, geode::Anchor anchor, cocos2d::CCPoint const& offset) {
-    return placeAd(to, std::nullopt, type, anchor, offset);
-};
+}

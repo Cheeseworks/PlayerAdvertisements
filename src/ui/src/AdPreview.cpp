@@ -1,14 +1,14 @@
 #include "../AdPreview.hpp"
 
-#include "../ReportPopup.hpp"
+#include "../AdReportPopup.hpp"
 
-#include <Advertisements.h>
+#include <cw.h>
 
-#include <argon/argon.hpp>
+#include <rhatt/prelude.h>
+
+#include <dankmeme.argon/argon.hpp>
 
 #include <Geode/Geode.hpp>
-
-#include <Geode/ui/Button.hpp>
 
 #include <Geode/utils/async.hpp>
 
@@ -47,7 +47,7 @@ struct AdPreview::Impl final {
             case 3: return "Long";
             case 4: return "XL";
         };
-    };
+    }
 
     constexpr auto getFeatureState(LevelRating r) {
         switch (r) {
@@ -58,11 +58,11 @@ struct AdPreview::Impl final {
             case LevelRating::Legendary: return GJFeatureState::Legendary;
             case LevelRating::Mythic: return GJFeatureState::Mythic;
         };
-    };
+    }
 };
 
-AdPreview::AdPreview() : m_impl(std::make_unique<Impl>()) {};
-AdPreview::~AdPreview() {};
+AdPreview::AdPreview() : m_impl(std::make_unique<Impl>()) {}
+AdPreview::~AdPreview() {}
 
 void AdPreview::setupMetaLabels(AdLevelMetadata const& data) {
     cue::resetNode(m_impl->levelLabel);
@@ -71,11 +71,12 @@ void AdPreview::setupMetaLabels(AdLevelMetadata const& data) {
 
     m_impl->levelLabel = Label::create(
         data.name,
-        "bigFont.fnt");
+        "bigFont.fnt"
+    );
     m_impl->levelLabel->setID("level-name-label");
     m_impl->levelLabel->setAlignment(Label::Alignment::Center);
     m_impl->levelLabel->setLimitLabelWidth(m_mainLayer->getScaledContentWidth() - 1.25f, 0.5f);
-    m_impl->levelLabel->setPosition({m_mainLayer->getScaledContentWidth() / 2.f, m_mainLayer->getScaledContentHeight() - 32.5f});
+    m_impl->levelLabel->setPosition({ m_mainLayer->getScaledContentWidth() / 2.f, m_mainLayer->getScaledContentHeight() - 32.5f });
     m_impl->levelLabel->setScale(0.5f);
 
     m_mainLayer->addChild(m_impl->levelLabel, 1);
@@ -88,21 +89,22 @@ void AdPreview::setupMetaLabels(AdLevelMetadata const& data) {
         [id = numToString(data.id)](auto) {
             utils::clipboard::write(id);
             Notification::create("Copied to clipboard", NotificationIcon::Success)->show();
-        });
+        }
+    );
     m_impl->levelIDLabel->setID("copy-level-id-btn");
     m_impl->levelIDLabel->setOpacity(200);
-    m_impl->levelIDLabel->setPosition({m_impl->levelLabel->getPositionX(), m_impl->levelLabel->getPositionY() - 15.f});
+    m_impl->levelIDLabel->setPosition({ m_impl->levelLabel->getPositionX(), m_impl->levelLabel->getPositionY() - 15.f });
     m_impl->levelIDLabel->setScale(0.625f);
 
     m_mainLayer->addChild(m_impl->levelIDLabel, 1);
 
     m_impl->diff = GJDifficultySprite::create(data.difficulty, GJDifficultyName::Long);
     m_impl->diff->setID("difficulty-icon");
-    m_impl->diff->setPosition({m_impl->playBtn->getPositionX() - (m_impl->playBtn->getScaledContentWidth() * 0.875f), m_impl->playBtn->getPositionY()});
+    m_impl->diff->setPosition({ m_impl->playBtn->getPositionX() - (m_impl->playBtn->getScaledContentWidth() * 0.875f), m_impl->playBtn->getPositionY() });
     m_impl->diff->updateFeatureState(m_impl->getFeatureState(data.rating));
 
     m_mainLayer->addChild(m_impl->diff, 9);
-};
+}
 
 bool AdPreview::init(Ad ad, bool count) {
     m_impl->ad = std::move(ad);
@@ -121,7 +123,7 @@ bool AdPreview::init(Ad ad, bool count) {
 
     auto thumbnailContainer = CCClippingNode::create(m_bgSprite);
     thumbnailContainer->setID("level-thumbnail-container");
-    thumbnailContainer->setAnchorPoint({0.5, 0.5});
+    thumbnailContainer->setAnchorPoint({ 0.5, 0.5 });
     thumbnailContainer->setContentSize(m_bgSprite->getScaledContentSize());
     thumbnailContainer->setAlphaThreshold(0.f);
     thumbnailContainer->setZOrder(-8);
@@ -134,7 +136,8 @@ bool AdPreview::init(Ad ad, bool count) {
             .opacity = 255,
             .texture = "GJ_square07.png",
             .id = "",
-        });
+        }
+    );
     border->setPosition(m_bgSprite->getScaledContentSize() / 2.f);
 
     m_mainLayer->addChild(border, -1);
@@ -142,19 +145,22 @@ bool AdPreview::init(Ad ad, bool count) {
     m_impl->playBtnSprite = CCSprite::createWithSpriteFrameName("GJ_playBtn2_001.png");  // iq 99999 (send help)
     m_impl->playBtnLoading = LoadingSpinner::create(m_impl->playBtnSprite->getScaledContentHeight() * 0.875f);
 
-    m_buttonMenu->addChildAtPosition(m_impl->playBtnLoading, Anchor::Center, {0.f, 3.75f});
+    m_buttonMenu->addChildAtPosition(m_impl->playBtnLoading, Anchor::Center, { 0.f, 3.75f });
 
     m_impl->playBtn = CCMenuItemSpriteExtra::create(
         m_impl->playBtnSprite.take(),
         this,
-        menu_selector(AdPreview::onPlayButton));
+        menu_selector(AdPreview::onPlayButton)
+    );
     m_impl->playBtn->setID("play-btn");
     m_impl->playBtn->setPosition(m_impl->playBtnLoading->getPosition());
     m_impl->playBtn->setVisible(false);
 
     m_buttonMenu->addChild(m_impl->playBtn, 1);
 
+#ifdef CW_TESTING
     log::trace("Requesting data for level of ID {} for ad of ID {}", m_impl->ad.getLevel(), m_impl->ad.getID());
+#endif
 
     auto lvlCacheRes = AdsDirector::get()->getLevelMeta(m_impl->ad.getLevel());
     if (lvlCacheRes.isOk()) setupMetaLabels(std::move(lvlCacheRes).unwrap());
@@ -179,7 +185,9 @@ bool AdPreview::init(Ad ad, bool count) {
             s->m_impl->level = std::move(res).unwrap();  // it's soooo verbose
             auto& lvl = s->m_impl->level;
 
+#ifdef CW_TESTING
             log::debug("Retrieved level {} ({}) for ad of ID {}", lvl->m_levelName, lvl->m_levelID, s->m_impl->ad.getID());
+#endif
 
             auto ads = AdsDirector::get();
 
@@ -198,8 +206,8 @@ bool AdPreview::init(Ad ad, bool count) {
 
             auto statsContainer = CCNode::create();
             statsContainer->setID("level-stats-container");
-            statsContainer->setAnchorPoint({0, 0.5});
-            statsContainer->setPosition({s->m_impl->playBtn->getPositionX() + (s->m_impl->playBtn->getScaledContentWidth() * 0.625f), s->m_impl->playBtn->getPositionY()});
+            statsContainer->setAnchorPoint({ 0, 0.5 });
+            statsContainer->setPosition({ s->m_impl->playBtn->getPositionX() + (s->m_impl->playBtn->getScaledContentWidth() * 0.625f), s->m_impl->playBtn->getPositionY() });
             statsContainer->setLayout(statsContainerLayout);
 
             s->m_mainLayer->addChild(statsContainer, 9);
@@ -214,23 +222,25 @@ bool AdPreview::init(Ad ad, bool count) {
 
     auto viewCountLabel = Label::create(
         fmt::format("{} View{}", GameToolbox::pointsToString(m_impl->ad.getViews()), m_impl->ad.getViews() != 1 ? "s" : ""),  // this is so dumb
-        "geode.loader/mdFont.fnt");
+        "geode.loader/mdFont.fnt"
+    );
     viewCountLabel->setID("view-count-label");
     viewCountLabel->setScale(0.425f);
-    viewCountLabel->setColor({255, 193, 136});
+    viewCountLabel->setColor({ 255, 193, 136 });
     viewCountLabel->setAlignment(Label::Alignment::Center);
 
-    m_mainLayer->addChildAtPosition(viewCountLabel, Anchor::Center, {0.f, -45.f});
+    m_mainLayer->addChildAtPosition(viewCountLabel, Anchor::Center, { 0.f, -45.f });
 
     auto clickCountLabel = Label::create(
         fmt::format("{} Click{}", GameToolbox::pointsToString(m_impl->ad.getClicks()), m_impl->ad.getClicks() != 1 ? "s" : ""),  // this is still very dumb
-        "geode.loader/mdFontB.fnt");
+        "geode.loader/mdFontB.fnt"
+    );
     clickCountLabel->setID("click-count-label");
     clickCountLabel->setScale(0.375f);
-    clickCountLabel->setColor({104, 173, 209});
+    clickCountLabel->setColor({ 104, 173, 209 });
     clickCountLabel->setAlignment(Label::Alignment::Center);
 
-    m_mainLayer->addChildAtPosition(clickCountLabel, Anchor::Center, {0.f, -55.f});
+    m_mainLayer->addChildAtPosition(clickCountLabel, Anchor::Center, { 0.f, -55.f });
 
     auto thumbnail = LazySprite::create(thumbnailContainer->getScaledContentSize(), false);
     thumbnail->setAutoResize(true);
@@ -240,7 +250,9 @@ bool AdPreview::init(Ad ad, bool count) {
             if (auto c = container.lock()) cue::rescaleToMatch(t, c->getScaledContentWidth() * 1.5f);
             t->setOpacity(50);
 
+#ifdef CW_TESTING
             log::debug("Successfully loaded theme background");
+#endif
         } else if (res.isErr()) {
             log::error("Failed to load theme background: {}", res.unwrapErr());
         } else {
@@ -256,20 +268,23 @@ bool AdPreview::init(Ad ad, bool count) {
             "exMark_001.png",
             0.875f,
             CircleBaseColor::DarkAqua,
-            CircleBaseSize::Medium),
+            CircleBaseSize::Medium
+        ),
         [this](auto) {
-            if (auto reportPopup = ReportPopup::create(m_impl->ad)) reportPopup->show();
-        });
+            if (auto reportPopup = AdReportPopup::create(m_impl->ad)) reportPopup->show();
+        }
+    );
     reportBtn->setID("report-ad-btn");
     reportBtn->setScale(0.625f);
-    reportBtn->setPosition({0, 0});
+    reportBtn->setPosition({ 0, 0 });
 
     m_mainLayer->addChild(reportBtn);
 
     auto announcementBtnSprite = CircleButtonSprite::createWithSpriteFrameName(
         "geode.loader/news.png",
         0.75f,
-        CircleBaseColor::DarkAqua);
+        CircleBaseColor::DarkAqua
+    );
 
     auto announcementBtnLoading = LoadingSpinner::create(announcementBtnSprite->getScaledContentHeight() * 0.5f);
     announcementBtnLoading->setVisible(false);
@@ -280,7 +295,7 @@ bool AdPreview::init(Ad ad, bool count) {
             announcementBtnLoading->setVisible(true);
             sender->setVisible(false);
 
-            auto req = fetch::baseRequest();
+            auto req = cw::request::base();
 
             m_impl->announceTask.spawn(
                 req.get("https://ads.cheeseworks.gay/api/announcement"),
@@ -315,8 +330,10 @@ bool AdPreview::init(Ad ad, bool count) {
 
                         if (auto popup = MDPopup::create(title, content, "Close")) popup->show();
                     };
-                });
-        });
+                }
+            );
+        }
+    );
     announcementBtn->setID("latest-announcement-btn");
     announcementBtn->setScale(0.625f);
 
@@ -333,12 +350,12 @@ bool AdPreview::init(Ad ad, bool count) {
 
     auto btnContainer = CCNode::create();
     btnContainer->setID("btn-container");
-    btnContainer->setAnchorPoint({0.5, 0});
+    btnContainer->setAnchorPoint({ 0.5, 0 });
     btnContainer->setLayout(btnContainerLayout);
 
-    m_mainLayer->addChildAtPosition(btnContainer, Anchor::Bottom, {0.f, 7.5f});
+    m_mainLayer->addChildAtPosition(btnContainer, Anchor::Bottom, { 0.f, 7.5f });
 
-    auto btns = std::to_array<LinkButton>(
+    auto btns = std::to_array<cw::LinkButton>(
         {
             {
                 "discord-btn",
@@ -351,8 +368,9 @@ bool AdPreview::init(Ad ad, bool count) {
                         "Cancel",
                         "OK",
                         [](auto, bool ok) {
-                            if (ok) web::openLinkInBrowser("https://www.dsc.gg/cheeseworks");
-                        });
+                            if (ok) web::openLinkInBrowser("https://cwrk.cc/discord");
+                        }
+                    );
                 },
             },
             {
@@ -367,7 +385,8 @@ bool AdPreview::init(Ad ad, bool count) {
                         "OK",
                         [](auto, bool ok) {
                             if (ok) web::openLinkInBrowser("https://ads.cheeseworks.gay/");
-                        });
+                        }
+                    );
                 },
             },
             {
@@ -382,15 +401,18 @@ bool AdPreview::init(Ad ad, bool count) {
                         "OK",
                         [](auto, bool ok) {
                             if (ok) web::openLinkInBrowser("https://ko-fi.com/playerads");
-                        });
+                        }
+                    );
                 },
             },
-        });
+        }
+    );
 
     for (auto& b : btns) {
         auto btn = Button::createWithSpriteFrameName(
             b.sprite,
-            std::move(b.callback));
+            std::move(b.callback)
+        );
         btn->setID(std::move(b.id));
         btn->setScale(0.875f);
 
@@ -407,15 +429,17 @@ bool AdPreview::init(Ad ad, bool count) {
                 "This is the <cg>ad preview</c>. You can see statistics such as the <co>view count</c> & <cl>click count</c>, and <cy>play the level that was advertised</c>!\n\n<cc>If you find issues with the contents of the advertised level</c>, you can <cr>report the advertisement here</c>.",
                 "OK",
                 nullptr,
-                nullptr);
-        });
+                nullptr
+            );
+        }
+    );
     infoBtn->setID("info-btn");
     infoBtn->setScale(0.75f);
 
-    m_mainLayer->addChildAtPosition(infoBtn, Anchor::TopRight, {-13.75f, -13.75f});
+    m_mainLayer->addChildAtPosition(infoBtn, Anchor::TopRight, { -13.75f, -13.75f });
 
     return true;
-};
+}
 
 void AdPreview::onPlayButton(CCObject* sender) {
     m_impl->playBtnLoading->setVisible(true);
@@ -430,7 +454,8 @@ void AdPreview::onPlayButton(CCObject* sender) {
             "Yes",
             [](auto, bool ok) {
                 if (ok) CCDirector::sharedDirector()->popToRootScene();
-            });
+            }
+        );
 
         return;
     };
@@ -446,26 +471,31 @@ void AdPreview::onPlayButton(CCObject* sender) {
                     registerClick();
                     switchToLevel();
                 };
-            });
+            }
+        );
     } else {
         if (!m_impl->hasClicked) {
+#ifdef CW_TESTING
             log::debug("click registered for ad_id={}, user_id={}", m_impl->ad.getID(), m_impl->ad.getUser());
+#endif
 
             m_impl->hasClicked = true;
 
             registerClick();
             switchToLevel();
         } else {
-            log::debug("click already registered for ad_id={}, user_id={}",
-                m_impl->ad.getID(),
-                m_impl->ad.getUser());
+#ifdef CW_TESTING
+            log::debug("click already registered for ad_id={}, user_id={}", m_impl->ad.getID(), m_impl->ad.getUser());
+#endif
             switchToLevel();
         };
     };
-};
+}
 
 void AdPreview::registerClick() {
+#ifdef CW_TESTING
     log::debug("Sending click tracking request for ad_id={}, user_id={}", m_impl->ad.getID(), m_impl->ad.getUser());
+#endif
 
     m_impl->authTask.spawn(
         argon::startAuth(),
@@ -477,11 +507,12 @@ void AdPreview::registerClick() {
                 };
 
                 auto token = std::move(res).unwrapOrDefault();
+#ifdef CW_TESTING
                 log::debug("Token: {}", token);
-
                 log::debug("Sending click tracking request for ad_id={}, user_id={}", s->m_impl->ad.getID(), s->m_impl->ad.getUser());
+#endif
 
-                auto clickRequest = fetch::baseRequest();
+                auto clickRequest = cw::request::base();
 
                 matjson::Value clickBody = matjson::Value::object();
                 clickBody["ad_id"] = s->m_impl->ad.getID();
@@ -502,17 +533,24 @@ void AdPreview::registerClick() {
                                     res.code(),
                                     s->m_impl->ad.getID(),
                                     s->m_impl->ad.getUser(),
-                                    res.errorMessage());
+                                    res.errorMessage()
+                                );
                             };
 
+#ifdef CW_TESTING
                             log::debug("Click request completed for ad_id={}, user_id={}", s->m_impl->ad.getID(), s->m_impl->ad.getUser());
+#endif
                         };
-                    });
+                    }
+                );
 
+#ifdef CW_TESTING
                 log::debug("Sent click tracking request for ad_id={}, user_id={}", s->m_impl->ad.getID(), s->m_impl->ad.getUser());
+#endif
             };
-        });
-};
+        }
+    );
+}
 
 void AdPreview::switchToLevel() {
     auto layer = LevelInfoLayer::create(m_impl->level, false);
@@ -522,7 +560,7 @@ void AdPreview::switchToLevel() {
     m_impl->playBtnLoading->setVisible(false);
 
     layer->downloadLevel();  // ugh
-};
+}
 
 AdPreview* AdPreview::create(Ad ad, bool count) {
     auto ret = new AdPreview();
@@ -533,7 +571,7 @@ AdPreview* AdPreview::create(Ad ad, bool count) {
 
     delete ret;
     return nullptr;
-};
+}
 
 bool AdPreviewStat::init(ZStringView sprite, std::string label) {
     if (!CCNode::init()) return false;
@@ -544,7 +582,7 @@ bool AdPreviewStat::init(ZStringView sprite, std::string label) {
                       ->setAutoGrowAxis(0.f)
                       ->setAxisAlignment(AxisAlignment::Start);
 
-    setContentSize({0.f, 12.5f});
+    setContentSize({ 0.f, 12.5f });
     setLayout(layout);
 
     auto icon = CCSprite::createWithSpriteFrameName(sprite.c_str());
@@ -561,7 +599,7 @@ bool AdPreviewStat::init(ZStringView sprite, std::string label) {
     updateLayout();
 
     return true;
-};
+}
 
 AdPreviewStat* AdPreviewStat::create(ZStringView sprite, std::string label) {
     auto ret = new AdPreviewStat();
@@ -572,4 +610,4 @@ AdPreviewStat* AdPreviewStat::create(ZStringView sprite, std::string label) {
 
     delete ret;
     return nullptr;
-};
+}

@@ -1,10 +1,10 @@
 #pragma once
 
-#include <Advertisements.h>
+#include <util/ads.hpp>
 
 #include <Geode/Geode.hpp>
 
-namespace cw::ads {
+namespace cw::ads::ui {
     class AdPreviewStat final : public cocos2d::CCNode {
     protected:
         bool init(geode::ZStringView sprite, std::string label);

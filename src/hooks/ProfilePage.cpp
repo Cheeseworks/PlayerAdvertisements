@@ -1,6 +1,6 @@
-#include <Util.h>
+#include <cw.h>
 
-#include <Advertisements.h>
+#include <rhatt/prelude.h>
 
 #include <Geode/Geode.hpp>
 
@@ -19,12 +19,12 @@ class $modify(AdsProfilePage, ProfilePage) {
         if (!ProfilePage::init(p0, p1)) return false;
 
         if (win::isWide()) {
-            nodes::placeAd(m_mainLayer, AdType::Skyscraper, Anchor::Left, {30.f, 0.f});
-            nodes::placeAd(m_mainLayer, AdType::Skyscraper, Anchor::Right, {-30.f, 0.f});
+            nodes::placeAd(m_mainLayer, AdType::Skyscraper, Anchor::Left, { 30.f, 0.f });
+            nodes::placeAd(m_mainLayer, AdType::Skyscraper, Anchor::Right, { -30.f, 0.f });
         };
 
         return true;
-    };
+    }
 };
 
 PLAYERADS_HOOK_LISTENER(g_hookId);
