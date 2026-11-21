@@ -15,23 +15,25 @@ using namespace geode::prelude;
 using namespace cw::ads;
 
 namespace cw::ads {
-    namespace ui {
-        static void addAdButton(CCNode* menu, bool alt = true) {
-            auto btn = CCMenuItemExt::createSpriteExtra(
-                CircleButtonSprite::createWithSpriteFrameName(
-                    "adIcon.png"_spr,
-                    0.875f,
-                    CircleBaseColor::Green,
-                    alt ? CircleBaseSize::MediumAlt : CircleBaseSize::Medium
-                ),
-                [](auto) {
-                    pushSceneWithLayer(AdsDashboard::create());
-                }
-            );
-            btn->setID("ads-viewer-btn"_spr);
+    namespace nodes {
+        static void addAdButton(CCNode* to, bool alt = true) {
+            if (auto menu = typeinfo_cast<CCMenu*>(to)) {
+                auto btn = CCMenuItemExt::createSpriteExtra(
+                    CircleButtonSprite::createWithSpriteFrameName(
+                        "adIcon.png"_spr,
+                        0.875f,
+                        CircleBaseColor::Green,
+                        alt ? CircleBaseSize::MediumAlt : CircleBaseSize::Medium
+                    ),
+                    [](auto) {
+                        pushSceneWithLayer(AdsDashboard::create());
+                    }
+                );
+                btn->setID("ads-viewer-btn"_spr);
 
-            menu->addChild(btn);
-            menu->updateLayout();
+                menu->addChild(btn);
+                menu->updateLayout();
+            };
         }
     };
 };
@@ -68,7 +70,7 @@ class $modify(PAHookMenuLayer, MenuLayer) {
     bool init() {
         if (!MenuLayer::init()) return false;
 
-        if (auto menu = getChildByID("bottom-menu")) ui::addAdButton(menu);
+        if (auto menu = getChildByID("bottom-menu")) nodes::addAdButton(menu);
 
         return true;
     }
@@ -78,7 +80,7 @@ class $modify(PAHookLevelInfoLayer, LevelInfoLayer) {
     bool init(GJGameLevel* level, bool challenge) {
         if (!LevelInfoLayer::init(level, challenge)) return false;
 
-        if (auto menu = getChildByID("left-side-menu")) ui::addAdButton(menu, false);
+        if (auto menu = getChildByID("left-side-menu")) nodes::addAdButton(menu, false);
 
         return true;
     }

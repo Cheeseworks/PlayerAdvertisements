@@ -45,8 +45,8 @@ Happy advertising!
 
 ### Credits
 - **[ArcticWoof](user:7689052)**: Co-founder
-- **[iAndy_HD3](user:1688850)**: Contributed code
 - **[Level Thumbnails](mod:cdc.level_thumbnails)**: Level thumbnail image provider
+- **[iAndy_HD3](user:1688850)**: Contributed code
 
 ---
 

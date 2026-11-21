@@ -18,33 +18,45 @@ class $modify(AdsPauseLayer, PauseLayer) {
     void customSetup() {
         PauseLayer::customSetup();
 
-        auto levelName = static_cast<CCLabelBMFont*>(getChildByID("level-name"));
+        auto levelName = m_mainLayer->getChildByID("level-name");
         levelName->setVisible(false);
-
-        auto normalTitle = static_cast<CCLabelBMFont*>(getChildByID("normal-mode-label"));
-        auto normalProgress = static_cast<CCLabelBMFont*>(getChildByID("normal-progress-label"));
-        auto normalBar = static_cast<CCSprite*>(getChildByID("normal-progress-bar"));
-
-        auto practiceTitle = static_cast<CCLabelBMFont*>(getChildByID("practice-mode-label"));
-        auto practiceProgress = static_cast<CCLabelBMFont*>(getChildByID("practice-progress-label"));
-        auto practiceBar = static_cast<CCSprite*>(getChildByID("practice-progress-bar"));
-
-        auto playTime = static_cast<CCLabelBMFont*>(getChildByID("play-time"));
-        auto pointslabel = static_cast<CCLabelBMFont*>(getChildByID("points-label"));
 
         auto isPractice = PlayLayer::get()->m_isPracticeMode;
 
-        if (practiceTitle && normalTitle) normalTitle->setPositionY(practiceTitle->getPositionY());
-        if (practiceProgress && normalProgress) normalProgress->setPositionY(practiceProgress->getPositionY());
-        if (practiceBar && normalBar) normalBar->setPositionY(practiceBar->getPositionY());
+        if (GameManager::sharedState()->getGameVariable(GameVar::LegacyPauseProgress)) {
+            auto normalTitle = m_mainLayer->getChildByID("normal-mode-label");
+            auto normalProgress = m_mainLayer->getChildByID("normal-progress-label");
+            auto normalBar = m_mainLayer->getChildByID("normal-progress-bar");
 
-        if (normalTitle) normalTitle->setVisible(!isPractice);
-        if (normalProgress) normalProgress->setVisible(!isPractice);
-        if (normalBar) normalBar->setVisible(!isPractice);
+            auto practiceTitle = m_mainLayer->getChildByID("practice-mode-label");
+            auto practiceProgress = m_mainLayer->getChildByID("practice-progress-label");
+            auto practiceBar = m_mainLayer->getChildByID("practice-progress-bar");
 
-        if (practiceTitle) practiceTitle->setVisible(isPractice);
-        if (practiceProgress) practiceProgress->setVisible(isPractice);
-        if (practiceBar) practiceBar->setVisible(isPractice);
+            if (practiceTitle && normalTitle) normalTitle->setPositionY(practiceTitle->getPositionY());
+            if (practiceProgress && normalProgress) normalProgress->setPositionY(practiceProgress->getPositionY());
+            if (practiceBar && normalBar) normalBar->setPositionY(practiceBar->getPositionY());
+
+            if (normalTitle) normalTitle->setVisible(!isPractice);
+            if (normalProgress) normalProgress->setVisible(!isPractice);
+            if (normalBar) normalBar->setVisible(!isPractice);
+
+            if (practiceTitle) practiceTitle->setVisible(isPractice);
+            if (practiceProgress) practiceProgress->setVisible(isPractice);
+            if (practiceBar) practiceBar->setVisible(isPractice);
+        } else {
+            auto progressBar = m_mainLayer->getChildByID("progress-bar");
+            auto progressLabel = m_mainLayer->getChildByID("progress-label");
+            auto modeLabel = m_mainLayer->getChildByID("mode-label");
+            auto bestLabel = m_mainLayer->getChildByID("best-label");
+
+            if (progressBar) progressBar->setPositionY(progressBar->getPositionY() - 26.0f);
+            if (progressLabel) progressLabel->setPositionY(progressLabel->getPositionY() - 26.0f);
+            if (modeLabel) modeLabel->setPositionY(modeLabel->getPositionY() - 26.0f);
+            if (bestLabel) bestLabel->setPositionY(bestLabel->getPositionY() - 26.0f);
+        };
+
+        auto playTime = m_mainLayer->getChildByID("play-time");
+        auto pointslabel = m_mainLayer->getChildByID("points-label");
 
         if (playTime) playTime->setPositionY(playTime->getPositionY() - 30.f);
         if (pointslabel) pointslabel->setPositionY(pointslabel->getPositionY() - 30.f);
