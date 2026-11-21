@@ -18,7 +18,7 @@ class $modify(AdsCreatorLayer, CreatorLayer) {
     bool init() {
         if (!CreatorLayer::init()) return false;
 
-        nodes::placeAd(this, AdType::Banner, Anchor::Top, { 0.f, -30.f });
+        nodes::placeAd(this, AdType::Banner, Anchor::Top, { 0.0f, -30.0f });
 
         return true;
     }

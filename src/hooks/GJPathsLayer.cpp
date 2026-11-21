@@ -19,8 +19,8 @@ class $modify(AdsGJPathsLayer, GJPathsLayer) {
         if (!GJPathsLayer::init()) return false;
 
         if (win::isWide()) {
-            nodes::placeAd(m_mainLayer, AdType::Skyscraper, Anchor::Left, { 30.f, 0.f });
-            nodes::placeAd(m_mainLayer, AdType::Skyscraper, Anchor::Right, { -30.f, 0.f });
+            nodes::placeAd(m_mainLayer, AdType::Skyscraper, Anchor::Left, { 30.0f, 0.0f });
+            nodes::placeAd(m_mainLayer, AdType::Skyscraper, Anchor::Right, { -30.0f, 0.0f });
         };
 
         return true;

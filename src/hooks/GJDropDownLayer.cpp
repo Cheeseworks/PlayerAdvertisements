@@ -18,11 +18,11 @@ class $modify(AdsGJDropDownLayer, GJDropDownLayer) {
     bool init(const char* p0, float p1, bool p2) {
         if (!GJDropDownLayer::init(p0, p1, p2)) return false;
 
-        nodes::placeAd(m_mainLayer, AdType::Banner, Anchor::Top, { 0.f, -30.f });
+        nodes::placeAd(m_mainLayer, AdType::Banner, Anchor::Top, { 0.0f, -30.0f });
 
         if (win::isWide() && !m_mainLayer->getChildByID("hide-dropdown-menu")) {
-            nodes::placeAd(m_mainLayer, AdType::Skyscraper, Anchor::Left, { 30.f, 0.f });
-            nodes::placeAd(m_mainLayer, AdType::Skyscraper, Anchor::Right, { -30.f, 0.f });
+            nodes::placeAd(m_mainLayer, AdType::Skyscraper, Anchor::Left, { 30.0f, 0.0f });
+            nodes::placeAd(m_mainLayer, AdType::Skyscraper, Anchor::Right, { -30.0f, 0.0f });
         };
 
         return true;

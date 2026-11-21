@@ -2,6 +2,8 @@
 
 #include <cw.h>
 
+#include <rhatt/prelude.h>
+
 #include <dankmeme.argon/argon.hpp>
 
 #include <asp/iter.hpp>
@@ -71,7 +73,7 @@ void fetch::getLevel(int id, CopyableFunction<void(Result<GJGameLevel*>)>&& call
                 auto const kv = asp::iter::split(levelStr, ":").collect();
                 for (size_t i = 0; i + 1 < kv.size(); i += 2) dict->setObject(CCString::create(std::string{ kv[i + 1] }), std::string{ kv[i] });
 
-                data->m_levelString = dict->charForKey(numToString(4));
+                data->m_levelString = dict->charForKey(cw::fmtNum(4));
 
                 cb(Ok(data));
             } else {

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <rhatt/ui/nodes/WebSprite.hpp>
+
 #include <util/ads.hpp>
 
 #include <Geode/Geode.hpp>
@@ -34,9 +36,9 @@ namespace cw::ads::ui {
         void loadRandom();
 
         /**
-         * Get the LazySprite associated with the advertisement
+         * Get the WebSprite associated with the advertisement
          */
-        geode::LazySprite* getAdSprite() const noexcept;
+        ::cw::ui::WebSprite* getAdSprite() const noexcept;
 
         /**
          * Handle the response from the advertisement fetch request

@@ -27,12 +27,12 @@ class $modify(AdsPlayLayer, PlayLayer) {
     void setupHasCompleted() {
         auto f = m_fields.self();
 
-        f->bannerBottom = nodes::placeAd(m_uiLayer, AdType::Banner, Anchor::Bottom, { 0.f, 30.f });
-        f->bannerBottom = nodes::placeAd(m_uiLayer, AdType::Banner, Anchor::Bottom, { 0.f, 30.f });
+        f->bannerBottom = nodes::placeAd(m_uiLayer, AdType::Banner, Anchor::Bottom, { 0.0f, 30.0f });
+        f->bannerBottom = nodes::placeAd(m_uiLayer, AdType::Banner, Anchor::Bottom, { 0.0f, 30.0f });
 
         if (win::isWide()) {
-            f->skyscraperLeft = nodes::placeAd(m_uiLayer, AdType::Skyscraper, Anchor::Left, { 30.f, 0.f });
-            f->skyscraperRight = nodes::placeAd(m_uiLayer, AdType::Skyscraper, Anchor::Right, { -30.f, 0.f });
+            f->skyscraperLeft = nodes::placeAd(m_uiLayer, AdType::Skyscraper, Anchor::Left, { 30.0f, 0.0f });
+            f->skyscraperRight = nodes::placeAd(m_uiLayer, AdType::Skyscraper, Anchor::Right, { -30.0f, 0.0f });
         };
 
 #ifdef CW_TESTING

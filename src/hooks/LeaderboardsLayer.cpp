@@ -18,7 +18,7 @@ class $modify(AdsLeaderboardsLayer, LeaderboardsLayer) {
     bool init(LeaderboardType type, LeaderboardStat stat) {
         if (!LeaderboardsLayer::init(type, stat)) return false;
 
-        nodes::placeAd(this, AdType::Banner, Anchor::Bottom, { 0.f, 30.f });
+        nodes::placeAd(this, AdType::Banner, Anchor::Bottom, { 0.0f, 30.0f });
 
         return true;
     }

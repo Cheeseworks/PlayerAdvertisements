@@ -76,24 +76,24 @@ void AdPreview::setupMetaLabels(AdLevelMetadata const& data) {
     m_impl->levelLabel->setID("level-name-label");
     m_impl->levelLabel->setAlignment(Label::Alignment::Center);
     m_impl->levelLabel->setLimitLabelWidth(m_mainLayer->getScaledContentWidth() - 1.25f, 0.5f);
-    m_impl->levelLabel->setPosition({ m_mainLayer->getScaledContentWidth() / 2.f, m_mainLayer->getScaledContentHeight() - 32.5f });
+    m_impl->levelLabel->setPosition({ m_mainLayer->getScaledContentWidth() / 2.0f, m_mainLayer->getScaledContentHeight() - 32.5f });
     m_impl->levelLabel->setScale(0.5f);
 
     m_mainLayer->addChild(m_impl->levelLabel, 1);
 
-    auto levelIDStr = numToString(data.id);
+    auto levelIDStr = cw::fmtNum(data.id);
 
     m_impl->levelIDLabel = Button::createWithLabel(
         levelIDStr,
         "chatFont.fnt",
-        [id = numToString(data.id)](auto) {
+        [id = cw::fmtNum(data.id)](auto) {
             utils::clipboard::write(id);
             Notification::create("Copied to clipboard", NotificationIcon::Success)->show();
         }
     );
     m_impl->levelIDLabel->setID("copy-level-id-btn");
     m_impl->levelIDLabel->setOpacity(200);
-    m_impl->levelIDLabel->setPosition({ m_impl->levelLabel->getPositionX(), m_impl->levelLabel->getPositionY() - 15.f });
+    m_impl->levelIDLabel->setPosition({ m_impl->levelLabel->getPositionX(), m_impl->levelLabel->getPositionY() - 15.0f });
     m_impl->levelIDLabel->setScale(0.625f);
 
     m_mainLayer->addChild(m_impl->levelIDLabel, 1);
@@ -110,7 +110,7 @@ bool AdPreview::init(Ad ad, bool count) {
     m_impl->ad = std::move(ad);
     m_impl->hasClicked = !count;
 
-    if (!Popup::init(250.f, 200.f, "GE_square03.png"_gode)) return false;
+    if (!Popup::init(250.0f, 200.0f, "GE_square03.png"_gode)) return false;
 
     setID("preview"_spr);
     setTitle(fmt::format("Ad #{}", m_impl->ad.getID()));
@@ -123,9 +123,9 @@ bool AdPreview::init(Ad ad, bool count) {
 
     auto thumbnailContainer = CCClippingNode::create(m_bgSprite);
     thumbnailContainer->setID("level-thumbnail-container");
-    thumbnailContainer->setAnchorPoint({ 0.5, 0.5 });
+    thumbnailContainer->setAnchorPoint(cw::anchor::center);
     thumbnailContainer->setContentSize(m_bgSprite->getScaledContentSize());
-    thumbnailContainer->setAlphaThreshold(0.f);
+    thumbnailContainer->setAlphaThreshold(0.0f);
     thumbnailContainer->setZOrder(-8);
 
     m_mainLayer->addChildAtPosition(thumbnailContainer, Anchor::Center);
@@ -138,14 +138,14 @@ bool AdPreview::init(Ad ad, bool count) {
             .id = "",
         }
     );
-    border->setPosition(m_bgSprite->getScaledContentSize() / 2.f);
+    border->setPosition(m_bgSprite->getScaledContentSize() / 2.0f);
 
     m_mainLayer->addChild(border, -1);
 
     m_impl->playBtnSprite = CCSprite::createWithSpriteFrameName("GJ_playBtn2_001.png");  // iq 99999 (send help)
     m_impl->playBtnLoading = LoadingSpinner::create(m_impl->playBtnSprite->getScaledContentHeight() * 0.875f);
 
-    m_buttonMenu->addChildAtPosition(m_impl->playBtnLoading, Anchor::Center, { 0.f, 3.75f });
+    m_buttonMenu->addChildAtPosition(m_impl->playBtnLoading, Anchor::Center, { 0.0f, 3.75f });
 
     m_impl->playBtn = CCMenuItemSpriteExtra::create(
         m_impl->playBtnSprite.take(),
@@ -197,16 +197,16 @@ bool AdPreview::init(Ad ad, bool count) {
             s->m_impl->playBtn->setVisible(true);
 
             auto statsContainerLayout = ColumnLayout::create()
-                                            ->setGap(5.f)
+                                            ->setGap(5.0f)
                                             ->setAutoScale(false)
                                             ->setCrossAxisLineAlignment(AxisAlignment::Start)
                                             ->setCrossAxisAlignment(AxisAlignment::Start)
-                                            ->setAutoGrowAxis(0.f)
+                                            ->setAutoGrowAxis(0.0f)
                                             ->setAxisReverse(true);
 
             auto statsContainer = CCNode::create();
             statsContainer->setID("level-stats-container");
-            statsContainer->setAnchorPoint({ 0, 0.5 });
+            statsContainer->setAnchorPoint({ 0.0f, 0.5f });
             statsContainer->setPosition({ s->m_impl->playBtn->getPositionX() + (s->m_impl->playBtn->getScaledContentWidth() * 0.625f), s->m_impl->playBtn->getPositionY() });
             statsContainer->setLayout(statsContainerLayout);
 
@@ -229,7 +229,7 @@ bool AdPreview::init(Ad ad, bool count) {
     viewCountLabel->setColor({ 255, 193, 136 });
     viewCountLabel->setAlignment(Label::Alignment::Center);
 
-    m_mainLayer->addChildAtPosition(viewCountLabel, Anchor::Center, { 0.f, -45.f });
+    m_mainLayer->addChildAtPosition(viewCountLabel, Anchor::Center, { 0.0f, -45.0f });
 
     auto clickCountLabel = Label::create(
         fmt::format("{} Click{}", GameToolbox::pointsToString(m_impl->ad.getClicks()), m_impl->ad.getClicks() != 1 ? "s" : ""),  // this is still very dumb
@@ -240,12 +240,12 @@ bool AdPreview::init(Ad ad, bool count) {
     clickCountLabel->setColor({ 104, 173, 209 });
     clickCountLabel->setAlignment(Label::Alignment::Center);
 
-    m_mainLayer->addChildAtPosition(clickCountLabel, Anchor::Center, { 0.f, -55.f });
+    m_mainLayer->addChildAtPosition(clickCountLabel, Anchor::Center, { 0.0f, -55.0f });
 
-    auto thumbnail = LazySprite::create(thumbnailContainer->getScaledContentSize(), false);
-    thumbnail->setAutoResize(true);
+    auto thumbnail = cw::WebSprite::create(thumbnailContainer->getScaledContentSize(), false);
+    thumbnailContainer->addChildAtPosition(thumbnail, Anchor::Center);
 
-    thumbnail->setLoadCallback([container = WeakRef(thumbnailContainer), t = thumbnail](Result<> res) {
+    thumbnail->load(fmt::format("https://levelthumbs.prevter.me/thumbnail/{}/medium", m_impl->ad.getLevel()), [container = WeakRef(thumbnailContainer), t = thumbnail](cw::WebSprite::LoadResult res) {
         if (res.isOk()) {
             if (auto c = container.lock()) cue::rescaleToMatch(t, c->getScaledContentWidth() * 1.5f);
             t->setOpacity(50);
@@ -260,9 +260,6 @@ bool AdPreview::init(Ad ad, bool count) {
         };
     });
 
-    thumbnailContainer->addChildAtPosition(thumbnail, Anchor::Center);
-    thumbnail->loadFromUrl(fmt::format("https://levelthumbs.prevter.me/thumbnail/{}/medium", m_impl->ad.getLevel()));
-
     auto reportBtn = Button::createWithNode(
         CircleButtonSprite::createWithSpriteFrameName(
             "exMark_001.png",
@@ -276,7 +273,7 @@ bool AdPreview::init(Ad ad, bool count) {
     );
     reportBtn->setID("report-ad-btn");
     reportBtn->setScale(0.625f);
-    reportBtn->setPosition({ 0, 0 });
+    reportBtn->setPosition({ 0.0f, 0.0f });
 
     m_mainLayer->addChild(reportBtn);
 
@@ -353,7 +350,7 @@ bool AdPreview::init(Ad ad, bool count) {
     btnContainer->setAnchorPoint({ 0.5, 0 });
     btnContainer->setLayout(btnContainerLayout);
 
-    m_mainLayer->addChildAtPosition(btnContainer, Anchor::Bottom, { 0.f, 7.5f });
+    m_mainLayer->addChildAtPosition(btnContainer, Anchor::Bottom, { 0.0f, 7.5f });
 
     auto btns = std::to_array<cw::LinkButton>(
         {
@@ -579,10 +576,10 @@ bool AdPreviewStat::init(ZStringView sprite, std::string label) {
     auto layout = RowLayout::create()
                       ->setGap(2.5f)
                       ->setAutoScale(false)
-                      ->setAutoGrowAxis(0.f)
+                      ->setAutoGrowAxis(0.0f)
                       ->setAxisAlignment(AxisAlignment::Start);
 
-    setContentSize({ 0.f, 12.5f });
+    setContentSize({ 0.0f, 12.5f });
     setLayout(layout);
 
     auto icon = CCSprite::createWithSpriteFrameName(sprite.c_str());

@@ -18,11 +18,11 @@ class $modify(AdsDailyLevelPage, DailyLevelPage) {
     bool init(GJTimedLevelType levelType) {
         if (!DailyLevelPage::init(levelType)) return false;
 
-        nodes::placeAd(m_mainLayer, AdType::Banner, Anchor::Center, { 0.f, -95.f });
+        nodes::placeAd(m_mainLayer, AdType::Banner, Anchor::Center, { 0.0f, -95.0f });
 
         if (win::isWide()) {
-            nodes::placeAd(m_mainLayer, AdType::Skyscraper, Anchor::Left, { 30.f, 0.f });
-            nodes::placeAd(m_mainLayer, AdType::Skyscraper, Anchor::Right, { -30.f, 0.f });
+            nodes::placeAd(m_mainLayer, AdType::Skyscraper, Anchor::Left, { 30.0f, 0.0f });
+            nodes::placeAd(m_mainLayer, AdType::Skyscraper, Anchor::Right, { -30.0f, 0.0f });
         };
 
         return true;

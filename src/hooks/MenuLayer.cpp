@@ -20,7 +20,7 @@ class $modify(AdsMenuLayer, MenuLayer) {
     bool init() {
         if (!MenuLayer::init()) return false;
 
-        nodes::placeAd(this, AdType::Banner, Anchor::Bottom, { 0.f, 92.5f });
+        nodes::placeAd(this, AdType::Banner, Anchor::Bottom, { 0.0f, 92.5f });
 
         return true;
     }

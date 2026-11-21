@@ -58,10 +58,10 @@ class $modify(AdsPauseLayer, PauseLayer) {
         auto playTime = m_mainLayer->getChildByID("play-time");
         auto pointslabel = m_mainLayer->getChildByID("points-label");
 
-        if (playTime) playTime->setPositionY(playTime->getPositionY() - 30.f);
-        if (pointslabel) pointslabel->setPositionY(pointslabel->getPositionY() - 30.f);
+        if (playTime) playTime->setPositionY(playTime->getPositionY() - 30.0f);
+        if (pointslabel) pointslabel->setPositionY(pointslabel->getPositionY() - 30.0f);
 
-        nodes::placeAd(this, AdType::Banner, Anchor::Top, { 0.f, -65.f });
+        nodes::placeAd(this, AdType::Banner, Anchor::Top, { 0.0f, -65.0f });
     }
 };
 

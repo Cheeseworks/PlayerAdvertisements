@@ -18,7 +18,7 @@ class $modify(AdsGauntletSelectLayer, GauntletSelectLayer) {
     bool init(int p0) {
         if (!GauntletSelectLayer::init(p0)) return false;
 
-        nodes::placeAd(this, AdType::Banner, Anchor::Bottom, { 0.f, 30.f });
+        nodes::placeAd(this, AdType::Banner, Anchor::Bottom, { 0.0f, 30.0f });
 
         return true;
     }

@@ -32,10 +32,10 @@ class $modify(AdsSecretLayer, SecretLayer) {
 
         auto f = m_fields.self();
 
-        if (!f->banner) f->banner = nodes::placeAd(this, AdType::Banner, Anchor::Top, { 0.f, -30.f });
+        if (!f->banner) f->banner = nodes::placeAd(this, AdType::Banner, Anchor::Top, { 0.0f, -30.0f });
 
-        if (!f->squareLeft) f->squareLeft = nodes::placeAd(this, AdType::Square, Anchor::BottomLeft, { 75.f, 75.f });
-        if (!f->squareRight) f->squareRight = nodes::placeAd(this, AdType::Square, Anchor::BottomRight, { -75.f, 75.f });
+        if (!f->squareLeft) f->squareLeft = nodes::placeAd(this, AdType::Square, Anchor::BottomLeft, { 75.0f, 75.0f });
+        if (!f->squareRight) f->squareRight = nodes::placeAd(this, AdType::Square, Anchor::BottomRight, { -75.0f, 75.0f });
 
         return true;
     }
@@ -78,10 +78,10 @@ class $modify(AdsSecretLayer4, SecretLayer4) {
 
         auto f = m_fields.self();
 
-        if (!f->banner) f->banner = nodes::placeAd(this, AdType::Banner, Anchor::Top, { 0.f, -30.f });
+        if (!f->banner) f->banner = nodes::placeAd(this, AdType::Banner, Anchor::Top, { 0.0f, -30.0f });
 
-        if (!f->squareLeft) f->squareLeft = nodes::placeAd(this, AdType::Square, Anchor::BottomLeft, { 75.f, 75.f });
-        if (!f->squareRight) f->squareRight = nodes::placeAd(this, AdType::Square, Anchor::BottomRight, { -75.f, 75.f });
+        if (!f->squareLeft) f->squareLeft = nodes::placeAd(this, AdType::Square, Anchor::BottomLeft, { 75.0f, 75.0f });
+        if (!f->squareRight) f->squareRight = nodes::placeAd(this, AdType::Square, Anchor::BottomRight, { -75.0f, 75.0f });
 
         return true;
     }
@@ -124,10 +124,10 @@ class $modify(AdsSecretLayer5, SecretLayer5) {
 
         auto f = m_fields.self();
 
-        if (!f->banner) f->banner = nodes::placeAd(this, AdType::Banner, Anchor::Top, { 0.f, -30.f });
+        if (!f->banner) f->banner = nodes::placeAd(this, AdType::Banner, Anchor::Top, { 0.0f, -30.0f });
 
-        if (!f->squareLeft) f->squareLeft = nodes::placeAd(this, AdType::Square, Anchor::BottomLeft, { 75.f, 75.f });
-        if (!f->squareRight) f->squareRight = nodes::placeAd(this, AdType::Square, Anchor::BottomRight, { -75.f, 75.f });
+        if (!f->squareLeft) f->squareLeft = nodes::placeAd(this, AdType::Square, Anchor::BottomLeft, { 75.0f, 75.0f });
+        if (!f->squareRight) f->squareRight = nodes::placeAd(this, AdType::Square, Anchor::BottomRight, { -75.0f, 75.0f });
 
         return true;
     }
@@ -169,7 +169,7 @@ class $modify(AdsSecretLayer2, SecretLayer2) {
 
         auto f = m_fields.self();
 
-        if (!f->banner) f->banner = nodes::placeAd(this, AdType::Banner, Anchor::Top, { 0.f, -30.f });
+        if (!f->banner) f->banner = nodes::placeAd(this, AdType::Banner, Anchor::Top, { 0.0f, -30.0f });
 
         return true;
     }
@@ -201,10 +201,10 @@ class $modify(AdsSecretLayer3, SecretLayer3) {
     bool init() {
         if (!SecretLayer3::init()) return false;
 
-        nodes::placeAd(this, AdType::Banner, Anchor::Top, { 0.f, -30.f });
+        nodes::placeAd(this, AdType::Banner, Anchor::Top, { 0.0f, -30.0f });
 
-        nodes::placeAd(this, AdType::Square, Anchor::BottomLeft, { 75.f, 75.f });
-        nodes::placeAd(this, AdType::Square, Anchor::BottomRight, { -75.f, 75.f });
+        nodes::placeAd(this, AdType::Square, Anchor::BottomLeft, { 75.0f, 75.0f });
+        nodes::placeAd(this, AdType::Square, Anchor::BottomRight, { -75.0f, 75.0f });
 
         return true;
     }

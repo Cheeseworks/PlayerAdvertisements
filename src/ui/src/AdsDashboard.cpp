@@ -34,14 +34,14 @@ bool AdsDashboardCell::init(Ad ad, bool managed, bool pending, float width) {
 
     if (!CCNode::init()) return false;
 
-    setContentSize({ width, 75.f });
+    setContentSize({ width, 75.0f });
 
     cue::attachBackground(
         this,
         {
             .opacity = 255,
-            .sidePadding = 0.f,
-            .verticalPadding = 0.f,
+            .sidePadding = 0.0f,
+            .verticalPadding = 0.0f,
             .texture = "GE_square02.png"_gode,
             .id = "",
         }
@@ -52,14 +52,14 @@ bool AdsDashboardCell::init(Ad ad, bool managed, bool pending, float width) {
     title->setScale(0.375f);
     title->setAlignment(Label::Alignment::Center);
 
-    addChildAtPosition(title, Anchor::Top, { 0.f, -10.f });
+    addChildAtPosition(title, Anchor::Top, { 0.0f, -10.0f });
 
     auto imgContainer = NineSlice::create("black-square.png"_gode);
     imgContainer->setID("ad-thumbnail-container");
     imgContainer->setAnchorPoint({ 0, 0.5 });
-    imgContainer->setContentSize({ 112.5f, 60.f });
+    imgContainer->setContentSize({ 112.5f, 60.0f });
 
-    addChildAtPosition(imgContainer, Anchor::Left, { 12.5f, 0.f });
+    addChildAtPosition(imgContainer, Anchor::Left, { 12.5f, 0.0f });
 
     auto border = cue::createBackground(
         imgContainer->getScaledContentSize(),
@@ -77,25 +77,23 @@ bool AdsDashboardCell::init(Ad ad, bool managed, bool pending, float width) {
 
     auto imgClipper = CCClippingNode::create(imgContainer);
     imgClipper->setContentSize(imgContainer->getScaledContentSize());
-    imgClipper->setAlphaThreshold(0.f);
+    imgClipper->setAlphaThreshold(0.0f);
 
     addChild(imgClipper, 1);
 
-    auto img = LazySprite::create(imgClipper->getScaledContentSize());
+    auto img = cw::WebSprite::create(imgClipper->getScaledContentSize());
     img->setID("ad-image");
-    img->setAnchorPoint({ 0.5, 0.5 });
+    img->setAnchorPoint(cw::anchor::center);
 
-    img->setLoadCallback([type = m_ad.getType(), img, imgClipper](Result<> res) {
+    imgClipper->addChildAtPosition(img, Anchor::Center, { imgContainer->getPositionX(), 7.5f }, false);
+    img->load(m_ad.getImage(), [type = m_ad.getType(), img, imgClipper](cw::WebSprite::LoadResult res) {
         if (res.isErr()) {
             log::error("Failed to load ad thumbnail: {}", std::move(res).unwrapErr());
             return;
         };
 
-        type == AdType::Skyscraper ? img->setScale(imgClipper->getScaledContentHeight() * 2.f / img->getScaledContentHeight()) : img->setScale(imgClipper->getScaledContentWidth() * 1.125f / img->getScaledContentWidth());
+        type == AdType::Skyscraper ? img->setScale(imgClipper->getScaledContentHeight() * 2.0f / img->getScaledContentHeight()) : img->setScale(imgClipper->getScaledContentWidth() * 1.125f / img->getScaledContentWidth());
     });
-
-    imgClipper->addChildAtPosition(img, Anchor::Center, { imgContainer->getPositionX(), 7.5f }, false);
-    img->loadFromUrl(m_ad.getImage());
 
     auto viewCountLabel = Label::create(
         fmt::format("{} View{}", GameToolbox::pointsToString(m_ad.getViews()), m_ad.getViews() != 1 ? "s" : ""),  // this is so dumb
@@ -106,7 +104,7 @@ bool AdsDashboardCell::init(Ad ad, bool managed, bool pending, float width) {
     viewCountLabel->setColor({ 255, 193, 136 });
     viewCountLabel->setAlignment(Label::Alignment::Center);
 
-    addChildAtPosition(viewCountLabel, Anchor::Center, { 0.f, 5.f });
+    addChildAtPosition(viewCountLabel, Anchor::Center, { 0.0f, 5.0f });
 
     auto clickCountLabel = Label::create(
         fmt::format("{} Click{}", GameToolbox::pointsToString(m_ad.getClicks()), m_ad.getClicks() != 1 ? "s" : ""),  // this is still very dumb
@@ -117,7 +115,7 @@ bool AdsDashboardCell::init(Ad ad, bool managed, bool pending, float width) {
     clickCountLabel->setColor({ 104, 173, 209 });
     clickCountLabel->setAlignment(Label::Alignment::Center);
 
-    addChildAtPosition(clickCountLabel, Anchor::Center, { 0.f, -5.f });
+    addChildAtPosition(clickCountLabel, Anchor::Center, { 0.0f, -5.0f });
 
     auto adTypeLabel = Label::create(str::getStringForAdType(m_ad.getType()), "chatFont.fnt");
     adTypeLabel->setID("ad-type-label");
@@ -125,7 +123,7 @@ bool AdsDashboardCell::init(Ad ad, bool managed, bool pending, float width) {
     adTypeLabel->setOpacity(125);
     adTypeLabel->setAlignment(Label::Alignment::Center);
 
-    addChildAtPosition(adTypeLabel, Anchor::Bottom, { 0.f, 10.f });
+    addChildAtPosition(adTypeLabel, Anchor::Bottom, { 0.0f, 10.0f });
 
     auto viewBtn = Button::createWithNode(
         ButtonSprite::create(
@@ -140,7 +138,7 @@ bool AdsDashboardCell::init(Ad ad, bool managed, bool pending, float width) {
     viewBtn->setID("view-ad-btn");
     viewBtn->setScale(0.875f);
 
-    addChildAtPosition(viewBtn, Anchor::Right, { -1.f * (viewBtn->getScaledContentWidth() * 0.75f), 0.f });
+    addChildAtPosition(viewBtn, Anchor::Right, { -1.0f * (viewBtn->getScaledContentWidth() * 0.75f), 0.0f });
 
     return true;
 }
@@ -160,7 +158,7 @@ bool AdsDashboardSection::init(CCSize const& size) {
     if (!CCNode::init()) return false;
 
     setContentSize(size);
-    setAnchorPoint({ 0.5, 0.5 });
+    setAnchorPoint(cw::anchor::center);
     ignoreAnchorPointForPosition(false);
     setVisible(false);
 
@@ -188,9 +186,9 @@ bool AdsDashboardRecent::init(CCSize const& size) {
     recentAdsLabel->setScale(0.425f);
     recentAdsLabel->setAlignment(Label::Alignment::Center);
 
-    addChildAtPosition(recentAdsLabel, Anchor::Top, { 0.f, -15.f });
+    addChildAtPosition(recentAdsLabel, Anchor::Top, { 0.0f, -15.0f });
 
-    auto m_list = ScrollLayer::create({ getScaledContentWidth() - 37.5f, 175.f });
+    auto m_list = ScrollLayer::create({ getScaledContentWidth() - 37.5f, 175.0f });
     m_list->setID("ad-list");
     m_list->setZOrder(1);
     m_list->setAnchorPoint({ 0.5f, 0.5f });
@@ -198,10 +196,10 @@ bool AdsDashboardRecent::init(CCSize const& size) {
 
     m_list->m_contentLayer->setLayout(ScrollLayer::createDefaultListLayout());
 
-    addChildAtPosition(m_list, Anchor::Center, { 0.f, -12.5f });
+    addChildAtPosition(m_list, Anchor::Center, { 0.0f, -12.5f });
 
     auto adListBg = cue::createBackground(
-        { m_list->getScaledContentWidth() + 12.5f, m_list->getScaledContentHeight() + 15.f },
+        { m_list->getScaledContentWidth() + 12.5f, m_list->getScaledContentHeight() + 15.0f },
         {
             .cornerRoundness = -0.75f,
             .zOrder = 0,
@@ -220,7 +218,7 @@ bool AdsDashboardRecent::init(CCSize const& size) {
     countLabel->setOpacity(200);
     countLabel->setAlignment(Label::Alignment::Center);
 
-    addChildAtPosition(countLabel, Anchor::Top, { 0.f, -26.5f }, false);
+    addChildAtPosition(countLabel, Anchor::Top, { 0.0f, -26.5f }, false);
 
     auto recentAds = ads->getViewedAds();
 
@@ -255,9 +253,9 @@ bool AdsDashboardManaged::init(CCSize const& size) {
     manageAdsLabel->setScale(0.425f);
     manageAdsLabel->setAlignment(Label::Alignment::Center);
 
-    addChildAtPosition(manageAdsLabel, Anchor::Top, { 0.f, -15.f });
+    addChildAtPosition(manageAdsLabel, Anchor::Top, { 0.0f, -15.0f });
 
-    m_list = ScrollLayer::create({ getScaledContentWidth() - 37.5f, 175.f });
+    m_list = ScrollLayer::create({ getScaledContentWidth() - 37.5f, 175.0f });
     m_list->setID("ad-list");
     m_list->setZOrder(1);
     m_list->setAnchorPoint({ 0.5f, 0.5f });
@@ -265,10 +263,10 @@ bool AdsDashboardManaged::init(CCSize const& size) {
 
     m_list->m_contentLayer->setLayout(ScrollLayer::createDefaultListLayout());
 
-    addChildAtPosition(m_list, Anchor::Center, { 0.f, -12.5f });
+    addChildAtPosition(m_list, Anchor::Center, { 0.0f, -12.5f });
 
     auto adListBg = cue::createBackground(
-        { m_list->getScaledContentWidth() + 12.5f, m_list->getScaledContentHeight() + 15.f },
+        { m_list->getScaledContentWidth() + 12.5f, m_list->getScaledContentHeight() + 15.0f },
         {
             .cornerRoundness = -0.75f,
             .zOrder = 0,
@@ -326,7 +324,7 @@ bool AdsDashboard::init() {
     );
     title->setID("view-mod-info-btn");
 
-    addChildAtPosition(title, Anchor::Top, { 0.f, -1.f * (title->getScaledContentHeight() * 0.875f) }, false);
+    addChildAtPosition(title, Anchor::Top, { 0.0f, -1.0f * (title->getScaledContentHeight() * 0.875f) }, false);
 
     auto version = Label::create(Mod::get()->getVersion().toVString(), "chatFont.fnt");
     version->setID("version-label");
@@ -334,10 +332,10 @@ bool AdsDashboard::init() {
     version->setAlignment(Label::Alignment::Center);
     version->setOpacity(100);
 
-    addChildAtPosition(version, Anchor::Top, { 0.f, 0.f - ((title->getPositionY() - getScaledContentHeight()) - (title->getScaledContentHeight() * 0.625f)) }, false);
+    addChildAtPosition(version, Anchor::Top, { 0.0f, 0.0f - ((title->getPositionY() - getScaledContentHeight()) - (title->getScaledContentHeight() * 0.625f)) }, false);
 
     auto btnContainerLayout = ColumnLayout::create()
-                                  ->setGap(5.f)
+                                  ->setGap(5.0f)
                                   ->setAutoScale(false)
                                   ->setAutoGrowAxis(1.25f)
                                   ->setAxisReverse(true);
@@ -492,16 +490,16 @@ bool AdsDashboard::init() {
 
     addChild(announcementBtnLoading, 1);
 
-    static constexpr auto maxContainerWidth = 425.f;
-    static constexpr auto minSidesGap = 50.f;
+    static constexpr auto maxContainerWidth = 425.0f;
+    static constexpr auto minSidesGap = 50.0f;
 
-    auto containerWidth = std::min(maxContainerWidth, winSize.width - minSidesGap * 2.f);
+    auto containerWidth = std::min(maxContainerWidth, winSize.width - minSidesGap * 2.0f);
 
     auto menuContainer = NineSlice::create("GE_square03.png"_gode);
     menuContainer->setID("menu-container");
-    menuContainer->setContentSize({ containerWidth, 240.f });
+    menuContainer->setContentSize({ containerWidth, 240.0f });
 
-    addChildAtPosition(menuContainer, Anchor::Center, { 0.f, -8.75f }, false);
+    addChildAtPosition(menuContainer, Anchor::Center, { 0.0f, -8.75f }, false);
 
     menuContainer->addChildAtPosition(
         AdsDashboardRecent::create(menuContainer->getScaledContentSize()),

@@ -18,7 +18,7 @@ class $modify(AdsLevelBrowserLayer, LevelBrowserLayer) {
     bool init(GJSearchObject* searchObj) {
         if (!LevelBrowserLayer::init(searchObj)) return false;
 
-        nodes::placeAd(this, AdType::Banner, Anchor::Top, { 0.f, -30.f });
+        nodes::placeAd(this, AdType::Banner, Anchor::Top, { 0.0f, -30.0f });
 
         return true;
     }
