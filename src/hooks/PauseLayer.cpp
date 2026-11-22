@@ -22,8 +22,9 @@ class $modify(AdsPauseLayer, PauseLayer) {
         levelName->setVisible(false);
 
         auto isPractice = PlayLayer::get()->m_isPracticeMode;
+        auto isLegacyPause = GameManager::sharedState()->getGameVariable(GameVar::LegacyPauseProgress);
 
-        if (GameManager::sharedState()->getGameVariable(GameVar::LegacyPauseProgress)) {
+        if (isLegacyPause) {
             auto normalTitle = m_mainLayer->getChildByID("normal-mode-label");
             auto normalProgress = m_mainLayer->getChildByID("normal-progress-label");
             auto normalBar = m_mainLayer->getChildByID("normal-progress-bar");
@@ -61,7 +62,7 @@ class $modify(AdsPauseLayer, PauseLayer) {
         if (playTime) playTime->setPositionY(playTime->getPositionY() - 30.0f);
         if (pointslabel) pointslabel->setPositionY(pointslabel->getPositionY() - 30.0f);
 
-        nodes::placeAd(this, AdType::Banner, Anchor::Top, { 0.0f, -65.0f });
+        nodes::placeAd(this, AdType::Banner, Anchor::Top, { 0.0f, isLegacyPause ? -50.0f : -60.0f });
     }
 };
 

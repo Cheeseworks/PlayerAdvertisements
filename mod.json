@@ -18,6 +18,18 @@
         "prevter.imageplus": ">=1.2.0",
         "dankmeme.argon": ">=2.0.0-beta.1"
     },
+    "links": {
+        "source": "https://github.com/Cheeseworks/PlayerAdvertisements",
+        "homepage": "https://ads.cheeseworks.gay",
+        "community": "https://cwrk.cc/discord"
+    },
+    "tags": [
+        "online",
+        "content",
+        "universal",
+        "enhancement",
+        "utility"
+    ],
     "resources": {
         "sprites": [
             "resources/*.png"
@@ -33,18 +45,6 @@
                 "resources/badges/*.png"
             ]
         }
-    },
-    "tags": [
-        "online",
-        "content",
-        "universal",
-        "enhancement",
-        "utility"
-    ],
-    "links": {
-        "source": "https://github.com/Cheeseworks/PlayerAdvertisements",
-        "homepage": "https://ads.cheeseworks.gay",
-        "community": "https://cwrk.cc/discord"
     },
     "settings": {
         "scene-protection": {
