@@ -71,7 +71,7 @@ void AdPreview::setupMetaLabels(AdLevelMetadata const& data) {
 
     m_impl->levelLabel = Label::create(
         data.name,
-        "bigFont.fnt"
+        cw::font::big
     );
     m_impl->levelLabel->setID("level-name-label");
     m_impl->levelLabel->setAlignment(Label::Alignment::Center);
@@ -172,7 +172,7 @@ bool AdPreview::init(Ad ad, bool count) {
             if (res.isErr()) {
                 log::error("Failed to parse level: {}", std::move(res).unwrapErr());
 
-                auto errLabel = Label::create("Something went wrong...", "goldFont.fnt");
+                auto errLabel = Label::create("Something went wrong...", cw::font::gold);
                 errLabel->setID("error-label");
                 errLabel->setScale(0.375f);
                 errLabel->setAlignment(Label::Alignment::Center);
@@ -587,7 +587,7 @@ bool AdPreviewStat::init(ZStringView sprite, std::string label) {
 
     addChild(icon);
 
-    auto text = Label::create(std::move(label), "bigFont.fnt");
+    auto text = Label::create(std::move(label), cw::font::big);
     text->setLimitLabelWidth(37.5f, 0.425f);
     text->setScale(0.425f);
 

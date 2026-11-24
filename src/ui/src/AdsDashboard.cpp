@@ -47,7 +47,7 @@ bool AdsDashboardCell::init(Ad ad, bool managed, bool pending, float width) {
         }
     );
 
-    auto title = Label::create(fmt::format("Ad #{}", m_ad.getID()), "goldFont.fnt");
+    auto title = Label::create(fmt::format("Ad #{}", m_ad.getID()), cw::font::gold);
     title->setID("ad-title-label");
     title->setScale(0.375f);
     title->setAlignment(Label::Alignment::Center);
@@ -128,7 +128,7 @@ bool AdsDashboardCell::init(Ad ad, bool managed, bool pending, float width) {
     auto viewBtn = Button::createWithNode(
         ButtonSprite::create(
             "View Ad",
-            "goldFont.fnt",
+            cw::font::gold,
             "GJ_button_05.png"
         ),
         [this](auto) {
@@ -181,7 +181,7 @@ bool AdsDashboardRecent::init(CCSize const& size) {
 
     setVisible(true);
 
-    auto recentAdsLabel = Label::create("Recently Viewed Ads", "bigFont.fnt");
+    auto recentAdsLabel = Label::create("Recently Viewed Ads", cw::font::big);
     recentAdsLabel->setID("recent-ads-label");
     recentAdsLabel->setScale(0.425f);
     recentAdsLabel->setAlignment(Label::Alignment::Center);
@@ -248,7 +248,7 @@ AdsDashboardRecent* AdsDashboardRecent::create(CCSize const& size) {
 bool AdsDashboardManaged::init(CCSize const& size) {
     if (!AdsDashboardSection::init(size)) return false;
 
-    auto manageAdsLabel = Label::create("Recently Viewed Ads", "bigFont.fnt");
+    auto manageAdsLabel = Label::create("Recently Viewed Ads", cw::font::big);
     manageAdsLabel->setID("recent-ads-label");
     manageAdsLabel->setScale(0.425f);
     manageAdsLabel->setAlignment(Label::Alignment::Center);
@@ -317,7 +317,7 @@ bool AdsDashboard::init() {
 
     auto title = Button::createWithLabel(
         "Player Ads",
-        "goldFont.fnt",
+        cw::font::gold,
         [](auto) {
             openInfoPopup(Mod::get());
         }

@@ -279,7 +279,7 @@ void Advertisement::handleAdResponse(web::WebResponse const& res) {
                 particles->resetSystem();
                 particles->update(0.15f);
 
-                auto tag = Label::create("Featured", "bigFont.fnt");
+                auto tag = Label::create("Featured", cw::font::big);
                 tag->setScale(0.375f);
                 tag->setAnchorPoint({ 1, 0 });
                 tag->setAlignment(Label::Alignment::Right);

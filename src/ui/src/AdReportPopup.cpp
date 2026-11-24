@@ -45,7 +45,7 @@ bool AdReportPopup::init(Ad ad) {
 
     m_mainLayer->addChild(m_impl->descInput);
 
-    auto submitButtonSprite = ButtonSprite::create("Submit Report", 0, false, "goldFont.fnt", "GE_button_05.png", 0.0f, 1.0f);
+    auto submitButtonSprite = ButtonSprite::create("Submit Report", 0, false, cw::font::gold, "GE_button_05.png", 0.0f, 1.0f);
 
     auto submitSpinner = LoadingSpinner::create(submitButtonSprite->getScaledContentHeight());
     submitSpinner->setVisible(false);

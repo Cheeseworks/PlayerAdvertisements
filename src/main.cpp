@@ -92,7 +92,7 @@ Advertisement* nodes::placeAd(CCNode* to, std::optional<std::string> id, AdType 
     if (auto ad = Advertisement::create(type)) {
         ad->setID(id.has_value() ? std::move(*id) : formatIDForAd(type, anchor));
         ad->setScale(0.975f);
-        ad->setZOrder(HIGHEST_Z);
+        ad->setZOrder(CW_HIGHEST_Z);
 
         to->addChildAtPosition(ad, anchor, offset, false);
 
