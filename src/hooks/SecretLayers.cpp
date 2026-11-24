@@ -1,3 +1,4 @@
+#ifndef __APPLE__
 #include <cw.h>
 
 #include <rhatt/prelude.h>
@@ -211,3 +212,4 @@ class $modify(AdsSecretLayer3, SecretLayer3) {
 };
 
 PLAYERADS_HOOK_LISTENER(g_hookId);
+#endif
