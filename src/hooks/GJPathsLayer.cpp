@@ -10,7 +10,7 @@ using namespace geode::prelude;
 using namespace cw::ads;
 
 #define THIS_ID "GJPathsLayer"
-static constexpr auto g_hookId = THIS_ID;
+inline constexpr auto THIS_HOOK_ID = THIS_ID;
 
 class $modify(AdsGJPathsLayer, GJPathsLayer) {
     PLAYERADS_DELEGATE_HOOKS(THIS_ID);
@@ -27,4 +27,4 @@ class $modify(AdsGJPathsLayer, GJPathsLayer) {
     }
 };
 
-PLAYERADS_HOOK_LISTENER(g_hookId);
+PLAYERADS_HOOK_LISTENER(THIS_HOOK_ID);
