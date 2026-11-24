@@ -1,3 +1,4 @@
+// TODO: these fucking bindings
 #ifndef __APPLE__
 #include <cw.h>
 

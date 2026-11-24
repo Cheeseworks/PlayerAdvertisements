@@ -556,7 +556,10 @@ void AdPreview::switchToLevel() {
     m_impl->playBtn->setVisible(true);
     m_impl->playBtnLoading->setVisible(false);
 
+    // TODO: bindings again
+#ifndef GEODE_IS_IOS
     layer->downloadLevel();  // ugh
+#endif
 }
 
 AdPreview* AdPreview::create(Ad ad, bool count) {
