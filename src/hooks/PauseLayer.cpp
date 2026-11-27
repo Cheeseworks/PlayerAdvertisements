@@ -62,7 +62,7 @@ class $modify(AdsPauseLayer, PauseLayer) {
         if (playTime) playTime->setPositionY(playTime->getPositionY() - 30.0f);
         if (pointslabel) pointslabel->setPositionY(pointslabel->getPositionY() - 30.0f);
 
-        nodes::placeAd(this, AdType::Banner, Anchor::Top, { 0.0f, isLegacyPause ? -50.0f : -60.0f });
+        nodes::placeAd(m_mainLayer, AdType::Banner, Anchor::Top, { 0.0f, isLegacyPause ? -50.0f : -60.0f });
     }
 };
 
